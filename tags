@@ -1,0 +1,433 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AES_128_CCM	data/data.h	/^    AES_128_CCM = 0,$/;"	e	enum:symm_algorithm
+ANOYMOUS_CERTIFICATE_RESPONSE	data/data.h	/^    ANOYMOUS_CERTIFICATE_RESPONSE = 5,$/;"	e	enum:content_type
+ARRAY	data/data.h	5;"	d
+ARRAY_TYPE_FROM_ISSUER	data/data.h	/^    ARRAY_TYPE_FROM_ISSUER = 0,$/;"	e	enum:array_type
+ARRAY_TYPE_SPECIFIED	data/data.h	/^    ARRAY_TYPE_SPECIFIED = 1,$/;"	e	enum:array_type
+CA_CEAT_REVOKED	data/data.h	/^    CA_CEAT_REVOKED = 9,$/;"	e	enum:certificate_request_error_code
+CA_CERT_EXPIERD	data/data.h	/^    CA_CERT_EXPIERD = 8,$/;"	e	enum:certificate_request_error_code
+CERTIFACATE_RESPONSE_ACKNOWLEDGMENT	data/data.h	/^    CERTIFACATE_RESPONSE_ACKNOWLEDGMENT = 12,$/;"	e	enum:content_type
+CERTIFICATE	data/data.h	/^    CERTIFICATE = 3,$/;"	e	enum:signer_identifier_type
+CERTIFICATE_CHAIN	data/data.h	/^    CERTIFICATE_CHAIN = 4,$/;"	e	enum:signer_identifier_type
+CERTIFICATE_DIGEST_WITH_ECDSAP224	data/data.h	/^    CERTIFICATE_DIGEST_WITH_ECDSAP224 = 1,$/;"	e	enum:signer_identifier_type
+CERTIFICATE_DIGEST_WITH_ECDSAP256	data/data.h	/^    CERTIFICATE_DIGEST_WITH_ECDSAP256 = 2,$/;"	e	enum:signer_identifier_type
+CERTIFICATE_DIGETS_WITH_OTHER_ALGORITHM	data/data.h	/^    CERTIFICATE_DIGETS_WITH_OTHER_ALGORITHM = 5,$/;"	e	enum:signer_identifier_type
+CERTIFICATE_REQUEST	data/data.h	/^    CERTIFICATE_REQUEST = 3,$/;"	e	enum:content_type
+CERTIFICATE_REQUSET_ERROR	data/data.h	/^    CERTIFICATE_REQUSET_ERROR = 6,$/;"	e	enum:content_type
+CERTIFICATE_RESPONSE	data/data.h	/^    CERTIFICATE_RESPONSE = 4,$/;"	e	enum:content_type
+CIRCLE	data/data.h	/^    CIRCLE = 1,$/;"	e	enum:region_type
+COMMON_H	utils/common.h	2;"	d
+COMPRESSED_LSB_Y_0	data/data.h	/^    COMPRESSED_LSB_Y_0 = 2,$/;"	e	enum:ecc_public_keytype
+COMPRESSED_LSB_Y_1	data/data.h	/^    COMPRESSED_LSB_Y_1 = 3,$/;"	e	enum:ecc_public_keytype
+CONTENT_TYPE_CRL_REQUEST	data/data.h	/^    CONTENT_TYPE_CRL_REQUEST = 7,$/;"	e	enum:content_type
+CRL	data/data.h	/^    CRL = 8,$/;"	e	enum:content_type
+CRL_SIGNER	data/data.h	/^    CRL_SIGNER = 8,$/;"	e	enum:holder_type
+DATA_H	data/data.h	2;"	d
+DATA_HANDLE_H	data/data_handle.h	2;"	d
+ECDSA_NISTP224_WITH_SHA224	data/data.h	/^    ECDSA_NISTP224_WITH_SHA224 = 0,$/;"	e	enum:pk_algorithm
+ECDSA_NISTP256_WITH_SHA256	data/data.h	/^    ECDSA_NISTP256_WITH_SHA256 = 1,$/;"	e	enum:pk_algorithm
+ECIES_NISTP256	data/data.h	/^    ECIES_NISTP256 =2,$/;"	e	enum:pk_algorithm
+ENCRYPTED	data/data.h	/^    ENCRYPTED = 2,$/;"	e	enum:content_type
+ENCRYPTION_KEY	data/data.h	/^    ENCRYPTION_KEY = 1<<2,$/;"	e	enum:certificate_content_flags
+ENROLMENT_CERT_EXPIRED	data/data.h	/^    ENROLMENT_CERT_EXPIRED = 4,$/;"	e	enum:certificate_request_error_code
+ENROLMENT_CERT_REVOKED	data/data.h	/^    ENROLMENT_CERT_REVOKED = 5,$/;"	e	enum:certificate_request_error_code
+ENROLMENT_CERT_UNAUTHORIZED_PSIDS	data/data.h	/^    ENROLMENT_CERT_UNAUTHORIZED_PSIDS = 6,$/;"	e	enum:certificate_request_error_code
+ENROLMENT_CERT_UNAUTHORIZED_REGION	data/data.h	/^    ENROLMENT_CERT_UNAUTHORIZED_REGION = 6,$/;"	e	enum:certificate_request_error_code
+ENROLMENT_CERT_UNAUTHORIZED_TYPE	data/data.h	/^    ENROLMENT_CERT_UNAUTHORIZED_TYPE = 6,$/;"	e	enum:certificate_request_error_code
+EXPIRES	data/data.h	/^    EXPIRES = 1<<1,$/;"	e	enum:tbsdata_flags
+EXTENSIONS	data/data.h	/^    EXTENSIONS = 1<<3$/;"	e	enum:tbsdata_flags
+FAILURE	data/data_handle.h	/^u32 FAILURE = -1;$/;"	v
+FLAGS_CRL_SIGNER	data/data.h	/^    FLAGS_CRL_SIGNER = 1<<8,$/;"	e	enum:holder_type_flags
+FLAGS_SDE_ANONYMOUS	data/data.h	/^    FLAGS_SDE_ANONYMOUS = 1<<0,$/;"	e	enum:holder_type_flags
+FLAGS_SDE_CA	data/data.h	/^    FLAGS_SDE_CA = 1<<6,$/;"	e	enum:holder_type_flags
+FLAGS_SDE_ENROLMENT	data/data.h	/^    FLAGS_SDE_ENROLMENT = 1<<3,$/;"	e	enum:holder_type_flags
+FLAGS_SDE_IDENTIFIED_LOCALIZED	data/data.h	/^    FLAGS_SDE_IDENTIFIED_LOCALIZED = 1<<2,$/;"	e	enum:holder_type_flags
+FLAGS_SDE_IDENTIFIED_NOT_LOCALIZED	data/data.h	/^    FLAGS_SDE_IDENTIFIED_NOT_LOCALIZED = 1<<1,$/;"	e	enum:holder_type_flags
+FLAGS_WSA	data/data.h	/^    FLAGS_WSA = 1<<4,$/;"	e	enum:holder_type_flags
+FLAGS_WSA_CA	data/data.h	/^    FLAGS_WSA_CA = 1<<7,$/;"	e	enum:holder_type_flags
+FLAGS_WSA_ENROLMENT	data/data.h	/^    FLAGS_WSA_ENROLMENT = 1<<5,$/;"	e	enum:holder_type_flags
+FROM_ISSUER	data/data.h	/^    FROM_ISSUER = 0,$/;"	e	enum:region_type
+FUTURE_CA_CERT	data/data.h	/^    FUTURE_CA_CERT = 7,$/;"	e	enum:certificate_request_error_code
+FUTURE_ENROLMENT_CERT	data/data.h	/^    FUTURE_ENROLMENT_CERT = 3,$/;"	e	enum:certificate_request_error_code
+FUTURE_REQUEST	data/data.h	/^    FUTURE_REQUEST = 1,$/;"	e	enum:certificate_request_error_code
+ID_AND_EXPIRY	data/data.h	/^    ID_AND_EXPIRY = 1,$/;"	e	enum:crl_type
+ID_ONLY	data/data.h	/^    ID_ONLY = 0,$/;"	e	enum:crl_type
+LIFETIME_IS_DURATION	data/data.h	/^    LIFETIME_IS_DURATION = 1<<1,$/;"	e	enum:certificate_content_flags
+NONE	data/data.h	/^    NONE = 4,$/;"	e	enum:region_type
+NOT_ENOUGHT	data/data_handle.h	/^u32 NOT_ENOUGHT = -2;$/;"	v
+POLYGON	data/data.h	/^    POLYGON = 3,$/;"	e	enum:region_type
+RECTANGLE	data/data.h	/^    RECTANGLE = 2,$/;"	e	enum:region_type
+REQUEST_TOO_OLD	data/data.h	/^    REQUEST_TOO_OLD = 2,$/;"	e	enum:certificate_request_error_code
+SDE_ANONYMOUS	data/data.h	/^    SDE_ANONYMOUS = 0,$/;"	e	enum:holder_type
+SDE_CA	data/data.h	/^    SDE_CA = 6,$/;"	e	enum:holder_type
+SDE_ENROLMENT	data/data.h	/^    SDE_ENROLMENT = 3,$/;"	e	enum:holder_type
+SDE_IDENTIFIED_LOCALIZED	data/data.h	/^    SDE_IDENTIFIED_LOCALIZED = 2,$/;"	e	enum:holder_type
+SDE_IDENTIFIED_NOT_LOCALIZED	data/data.h	/^    SDE_IDENTIFIED_NOT_LOCALIZED = 1,$/;"	e	enum:holder_type
+SELF	data/data.h	/^    SELF = 0,$/;"	e	enum:signer_identifier_type
+SIGNED	data/data.h	/^    SIGNED = 1,$/;"	e	enum:content_type
+SIGNED_EXTERNAL_PAYLOAD	data/data.h	/^    SIGNED_EXTERNAL_PAYLOAD = 10,$/;"	e	enum:content_type
+SIGNED_PARTIAL_PAYLOAD	data/data.h	/^    SIGNED_PARTIAL_PAYLOAD = 9,$/;"	e	enum:content_type
+SIGNED_WSA	data/data.h	/^    SIGNED_WSA = 11,$/;"	e	enum:content_type
+STRING_H	utils/string.h	2;"	d
+STRUCT_PACKED	utils/common.h	22;"	d
+STRUCT_PACKED	utils/common.h	24;"	d
+SUCCESS	data/data_handle.h	/^u32 SUCCESS = 0;$/;"	v
+UNCOMPRESSED	data/data.h	/^    UNCOMPRESSED = 4,$/;"	e	enum:ecc_public_keytype
+UNSECURED	data/data.h	/^    UNSECURED = 0,$/;"	e	enum:content_type
+UNSED	data/data.h	/^    UNSED = 0,$/;"	e	enum:tobe_encrypted_anonymous_cert_response
+UNUSED	data/data.h	/^    UNUSED = 0,$/;"	e	enum:tbsdata_extension_type
+USE_GENERATION_TIME	data/data.h	/^    USE_GENERATION_TIME = 1<<0,$/;"	e	enum:tbsdata_flags
+USE_LOCATION	data/data.h	/^    USE_LOCATION = 1<<2,$/;"	e	enum:tbsdata_flags
+USE_START_VALIDITY	data/data.h	/^    USE_START_VALIDITY = 1<<0,$/;"	e	enum:certificate_content_flags
+VERIFICATION_FAILURE	data/data.h	/^    VERIFICATION_FAILURE = 0,$/;"	e	enum:certificate_request_error_code
+WSA	data/data.h	/^    WSA = 4,$/;"	e	enum:holder_type
+WSA_CA	data/data.h	/^    WSA_CA = 7,$/;"	e	enum:holder_type
+WSA_ENROLMENT	data/data.h	/^    WSA_ENROLMENT = 5,$/;"	e	enum:holder_type
+X_COORDINATE_ONLY	data/data.h	/^    X_COORDINATE_ONLY = 0,$/;"	e	enum:ecc_public_keytype
+ack	data/data.h	/^                ack;$/;"	m	union:tobe_encrypted::__anon25
+aes_ccm_ciphertext	data/data.h	/^typedef struct aes_ccm_ciphertext{$/;"	s
+aes_ccm_ciphertext	data/data.h	/^}aes_ccm_ciphertext;$/;"	t	typeref:struct:aes_ccm_ciphertext
+algorithm	data/data.h	/^            pk_algorithm algorithm;$/;"	m	struct:signer_identifier::__anon17::__anon18
+algorithm	data/data.h	/^    pk_algorithm algorithm;$/;"	m	struct:public_key
+anon_response	data/data.h	/^                anon_response;$/;"	m	union:tobe_encrypted::__anon25
+anonymous_scope	data/data.h	/^        anonymous_scope anonymous_scope;$/;"	m	union:cert_specific_data::__anon11
+anonymous_scope	data/data.h	/^typedef struct anonymous_scope{$/;"	s
+anonymous_scope	data/data.h	/^}anonymous_scope;$/;"	t	typeref:struct:anonymous_scope
+array_type	data/data.h	/^typedef enum array_type{$/;"	g
+array_type	data/data.h	/^}array_type;$/;"	t	typeref:enum:array_type
+be_to_host16	utils/common.h	5;"	d
+be_to_host32	utils/common.h	6;"	d
+be_to_host64	utils/common.h	7;"	d
+buf	utils/string.h	/^    u8 *buf;$/;"	m	struct:string
+buf_2_sec_data	data/data_free.c	/^void buf_2_sec_data(u8* buf,u32 len,sec_data* sec_data){$/;"	f
+ca_id	data/data.h	/^    hashedid8 ca_id;$/;"	m	struct:tobesigned_crl
+center	data/data.h	/^    two_d_location center;$/;"	m	struct:circular_region
+cert_id	data/data.h	/^    hashedid8 cert_id;$/;"	m	struct:recipient_info
+cert_specific_data	data/data.h	/^typedef struct cert_specific_data{$/;"	s
+cert_specific_data	data/data.h	/^}cert_specific_data;$/;"	t	typeref:struct:cert_specific_data
+certid10	data/data.h	/^    u8 certid10[10];$/;"	m	struct:certid10
+certid10	data/data.h	/^typedef struct certid10{$/;"	s
+certid10	data/data.h	/^}certid10;$/;"	t	typeref:struct:certid10
+certificate	data/data.h	/^        certificate certificate;$/;"	m	union:signer_identifier::__anon17
+certificate	data/data.h	/^typedef struct certificate{$/;"	s
+certificate	data/data.h	/^}certificate;$/;"	t	typeref:struct:certificate
+certificate_content_flags	data/data.h	/^typedef enum certificate_content_flags{$/;"	g
+certificate_content_flags	data/data.h	/^}certificate_content_flags;$/;"	t	typeref:enum:certificate_content_flags
+certificate_duration	data/data.h	/^typedef u16 certificate_duration;$/;"	t
+certificate_request	data/data.h	/^typedef struct certificate_request{$/;"	s
+certificate_request	data/data.h	/^}certificate_request;$/;"	t	typeref:struct:certificate_request
+certificate_request_error_code	data/data.h	/^typedef enum certificate_request_error_code{$/;"	g
+certificate_request_error_code	data/data.h	/^}certificate_request_error_code;$/;"	t	typeref:enum:certificate_request_error_code
+cf	data/data.h	/^    certificate_content_flags cf;$/;"	m	struct:tobesigned_certificate
+cf	data/data.h	/^    certificate_content_flags cf;$/;"	m	struct:tobesigned_certificate_request
+ciphertext	data/data.h	/^        aes_ccm_ciphertext ciphertext;$/;"	m	union:encrypted_data::__anon27
+circular_region	data/data.h	/^        circular_region circular_region;$/;"	m	union:geographic_region::__anon5
+circular_region	data/data.h	/^typedef struct circular_region{$/;"	s
+circular_region	data/data.h	/^}circular_region;$/;"	t	typeref:struct:circular_region
+content_type	data/data.h	/^typedef enum content_type{$/;"	g
+content_type	data/data.h	/^}content_type;$/;"	t	typeref:enum:content_type
+crl	data/data.h	/^		struct crl crl;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::crl
+crl	data/data.h	/^        crl crl;$/;"	m	union:tobe_encrypted::__anon25
+crl	data/data.h	/^typedef struct crl{$/;"	s
+crl	data/data.h	/^}crl;$/;"	t	typeref:struct:crl
+crl_request	data/data.h	/^		struct crl_request crl_request;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::crl_request
+crl_request	data/data.h	/^        crl_request crl_request;$/;"	m	union:tobe_encrypted::__anon25
+crl_request	data/data.h	/^typedef struct crl_request{$/;"	s
+crl_request	data/data.h	/^}crl_request;$/;"	t	typeref:struct:crl_request
+crl_serial	data/data.h	/^    u32 crl_serial;$/;"	m	struct:tobesigned_crl
+crl_series	data/data.h	/^    crl_series crl_series;$/;"	m	struct:crl_request
+crl_series	data/data.h	/^    crl_series crl_series;$/;"	m	struct:tobesigned_certificate
+crl_series	data/data.h	/^    crl_series crl_series;$/;"	m	struct:tobesigned_crl
+crl_series	data/data.h	/^typedef u32 crl_series;$/;"	t
+crl_type	data/data.h	/^typedef enum crl_type{$/;"	g
+crl_type	data/data.h	/^}crl_type;$/;"	t	typeref:enum:crl_type
+digest	data/data.h	/^            hashedid8 digest;$/;"	m	struct:signer_identifier::__anon17::__anon18
+digest	data/data.h	/^        hashedid8 digest;$/;"	m	union:signer_identifier::__anon17
+ecc_public_keytype	data/data.h	/^typedef enum ecc_public_keytype{$/;"	g
+ecc_public_keytype	data/data.h	/^}ecc_public_keytype;$/;"	t	typeref:enum:ecc_public_keytype
+ecdsa_signature	data/data.h	/^        ecdsa_signature ecdsa_signature;$/;"	m	union:signature::__anon2
+ecdsa_signature	data/data.h	/^typedef struct ecdsa_signature{$/;"	s
+ecdsa_signature	data/data.h	/^}ecdsa_signature;$/;"	t	typeref:struct:ecdsa_signature
+ecies_nist_p256_encrypted_key	data/data.h	/^typedef struct ecies_nist_p256_encrypted_key{$/;"	s
+ecies_nist_p256_encrypted_key	data/data.h	/^}ecies_nist_p256_encrypted_key;$/;"	t	typeref:struct:ecies_nist_p256_encrypted_key
+ecies_nistp256	data/data.h	/^        }ecies_nistp256;$/;"	m	union:public_key::__anon3	typeref:struct:public_key::__anon3::__anon4
+elevation	data/data.h	/^    u8 elevation[2];$/;"	m	struct:three_d_location
+elliptic_curve_point	data/data.h	/^typedef struct elliptic_curve_point{$/;"	s
+elliptic_curve_point	data/data.h	/^}elliptic_curve_point;$/;"	t	typeref:struct:elliptic_curve_point
+enc_key	data/data.h	/^        ecies_nist_p256_encrypted_key enc_key;$/;"	m	union:recipient_info::__anon26
+encrypted_data	data/data.h	/^		struct encrypted_data encrypted_data;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::encrypted_data
+encrypted_data	data/data.h	/^typedef struct encrypted_data{$/;"	s
+encrypted_data	data/data.h	/^}encrypted_data;$/;"	t	typeref:struct:encrypted_data
+encryption_key	data/data.h	/^        public_key encryption_key;$/;"	m	struct:tobesigned_certificate::__anon15
+encryption_key	data/data.h	/^        public_key encryption_key;$/;"	m	struct:tobesigned_certificate_request::__anon21
+exipir_time	data/data.h	/^        time64 exipir_time;$/;"	m	struct:tobesigned_data::__anon24
+expiration	data/data.h	/^    time32 expiration;$/;"	m	struct:tobesigned_certificate
+expiration	data/data.h	/^    time32 expiration;$/;"	m	struct:tobesigned_certificate_request
+expire_time	data/data.h	/^    time64 expire_time;$/;"	m	struct:tobesigned_wsa
+expiry	data/data.h	/^    time32 expiry;$/;"	m	struct:id_and_date
+f	data/data.h	/^    u8 f;\/\/这个地方在协议中是flag，可能是说一bite的意思，这个我们后面在看。$/;"	m	struct:tobe_encrypted_certificate_response
+flags_content	data/data.h	/^    }flags_content;$/;"	m	struct:root_ca_scope	typeref:struct:root_ca_scope::__anon10
+flags_content	data/data.h	/^    }flags_content;$/;"	m	struct:tobesigned_certificate	typeref:struct:tobesigned_certificate::__anon15
+flags_content	data/data.h	/^    }flags_content;$/;"	m	struct:tobesigned_certificate_request	typeref:struct:tobesigned_certificate_request::__anon21
+flags_content	data/data.h	/^    }flags_content;$/;"	m	struct:tobesigned_wsa	typeref:struct:tobesigned_wsa::__anon28
+flags_content	data/data.h	/^   }flags_content;$/;"	m	struct:tobesigned_data	typeref:struct:tobesigned_data::__anon24
+generation_location	data/data.h	/^        three_d_location generation_location;$/;"	m	struct:tobesigned_data::__anon24
+generation_location	data/data.h	/^    three_d_location generation_location;$/;"	m	struct:tobesigned_wsa
+generation_time	data/data.h	/^        time64_with_standard_deviation generation_time;$/;"	m	struct:tobesigned_data::__anon24
+generation_time	data/data.h	/^    time64_with_standard_deviation generation_time;$/;"	m	struct:tobesigned_wsa
+geographic_region	data/data.h	/^typedef struct geographic_region{$/;"	s
+geographic_region	data/data.h	/^}geographic_region;$/;"	t	typeref:struct:geographic_region
+get16	data/data_free.c	2;"	d	file:
+get32	data/data_free.c	3;"	d	file:
+get64	data/data_free.c	4;"	d	file:
+hashedid8	data/data.h	/^    u8 hashedid8[8];$/;"	m	struct:hashedid8
+hashedid8	data/data.h	/^typedef struct hashedid8{$/;"	s
+hashedid8	data/data.h	/^}hashedid8;$/;"	t	typeref:struct:hashedid8
+holder_type	data/data.h	/^    holder_type holder_type;$/;"	m	struct:tobesigned_certificate
+holder_type	data/data.h	/^    holder_type holder_type;$/;"	m	struct:tobesigned_certificate_request
+holder_type	data/data.h	/^typedef enum holder_type{$/;"	g
+holder_type	data/data.h	/^}holder_type;$/;"	t	typeref:enum:holder_type
+holder_type_flags	data/data.h	/^typedef enum holder_type_flags{$/;"	g
+holder_type_flags	data/data.h	/^}holder_type_flags;$/;"	t	typeref:enum:holder_type_flags
+host_to_be16	utils/common.h	8;"	d
+host_to_be32	utils/common.h	9;"	d
+host_to_be64	utils/common.h	10;"	d
+id	data/data.h	/^    certid10 id;$/;"	m	struct:id_and_date
+id_and_date	data/data.h	/^typedef struct id_and_date{$/;"	s
+id_and_date	data/data.h	/^}id_and_date;$/;"	t	typeref:struct:id_and_date
+id_non_loc_scope	data/data.h	/^        identified_not_localized_scope id_non_loc_scope;$/;"	m	union:cert_specific_data::__anon11
+id_scope	data/data.h	/^        identified_scope id_scope;$/;"	m	union:cert_specific_data::__anon11
+identified_not_localized_scope	data/data.h	/^typedef struct identified_not_localized_scope{$/;"	s
+identified_not_localized_scope	data/data.h	/^}identified_not_localized_scope;$/;"	t	typeref:struct:identified_not_localized_scope
+identified_scope	data/data.h	/^typedef struct identified_scope{$/;"	s
+identified_scope	data/data.h	/^}identified_scope;$/;"	t	typeref:struct:identified_scope
+issue_date	data/data.h	/^    time32 issue_date;$/;"	m	struct:crl_request
+issue_date	data/data.h	/^    time32 issue_date;$/;"	m	struct:tobesigned_crl
+issuer	data/data.h	/^    hashedid8 issuer;$/;"	m	struct:crl_request
+latitude	data/data.h	/^    s32 latitude;$/;"	m	struct:three_d_location
+latitude	data/data.h	/^    s32 latitude;$/;"	m	struct:two_d_location
+len	utils/string.h	/^    u16 len;$/;"	m	struct:string
+lifetime	data/data.h	/^        certificate_duration lifetime;$/;"	m	struct:tobesigned_certificate::__anon15
+lifetime	data/data.h	/^        certificate_duration lifetime;$/;"	m	struct:tobesigned_certificate_request::__anon21
+long_std_dev	data/data.h	/^    u8 long_std_dev;$/;"	m	struct:time64_with_standard_deviation
+longitude	data/data.h	/^    s32 longitude;$/;"	m	struct:three_d_location
+longitude	data/data.h	/^    s32 longitude;$/;"	m	struct:two_d_location
+max_priority	data/data.h	/^    u8 max_priority;$/;"	m	struct:psid_priority
+max_priority	data/data.h	/^    u8 max_priority;$/;"	m	struct:psid_priority_ssp
+name	data/data.h	/^    u8* name;$/;"	m	struct:identified_not_localized_scope
+name	data/data.h	/^    u8* name;$/;"	m	struct:identified_scope
+name	data/data.h	/^    u8* name;$/;"	m	struct:wsa_scope
+next_crl	data/data.h	/^    time32 next_crl;$/;"	m	struct:tobesigned_crl
+no_root_ca	data/data.h	/^        }no_root_ca;$/;"	m	union:tobesigned_certificate::__anon12	typeref:struct:tobesigned_certificate::__anon12::__anon13
+nonce	data/data.h	/^    u8 nonce[12];$/;"	m	struct:aes_ccm_ciphertext
+north_west	data/data.h	/^    two_d_location north_west;$/;"	m	struct:rectangular_region
+other_algorithm	data/data.h	/^        }other_algorithm;$/;"	m	union:signer_identifier::__anon17	typeref:struct:signer_identifier::__anon17::__anon18
+permissions	data/data.h	/^    psid_array permissions;$/;"	m	struct:sec_data_exch_ca_scope
+permissions	data/data.h	/^    psid_priority_array permissions;$/;"	m	struct:wsa_ca_scope
+permissions	data/data.h	/^    psid_priority_ssp_array permissions;$/;"	m	struct:wsa_scope
+permissions	data/data.h	/^    psid_ssp_array permissions;$/;"	m	struct:anonymous_scope
+permissions	data/data.h	/^    psid_ssp_array permissions;$/;"	m	struct:identified_not_localized_scope
+permissions	data/data.h	/^    psid_ssp_array permissions;$/;"	m	struct:identified_scope
+permitted_holder_types	data/data.h	/^    holder_type_flags permitted_holder_types;$/;"	m	struct:root_ca_scope
+permitted_holder_types	data/data.h	/^    holder_type_flags permitted_holder_types;$/;"	m	struct:sec_data_exch_ca_scope
+pk_algorithm	data/data.h	/^typedef enum pk_algorithm{$/;"	g
+pk_algorithm	data/data.h	/^}pk_algorithm;$/;"	t	typeref:enum:pk_algorithm
+polygonal_region	data/data.h	/^        polygonal_region polygonal_region;$/;"	m	union:geographic_region::__anon5
+polygonal_region	data/data.h	/^typedef two_d_location* polygonal_region;$/;"	t
+protocol_version	data/data.h	/^	u8 protocol_version;$/;"	m	struct:sec_data
+psid	data/data.h	/^            psid psid;$/;"	m	struct:tobesigned_data::__anon22::__anon23
+psid	data/data.h	/^        psid psid;$/;"	m	union:tobesigned_data::__anon22
+psid	data/data.h	/^    psid psid;$/;"	m	struct:psid_priority
+psid	data/data.h	/^    psid psid;$/;"	m	struct:psid_priority_ssp
+psid	data/data.h	/^    psid psid;$/;"	m	struct:psid_ssp
+psid	data/data.h	/^typedef u8* psid;$/;"	t
+psid_array	data/data.h	/^typedef struct psid_array{$/;"	s
+psid_array	data/data.h	/^}psid_array;$/;"	t	typeref:struct:psid_array
+psid_priority	data/data.h	/^typedef struct psid_priority{$/;"	s
+psid_priority	data/data.h	/^}psid_priority;$/;"	t	typeref:struct:psid_priority
+psid_priority_array	data/data.h	/^typedef struct psid_priority_array{$/;"	s
+psid_priority_array	data/data.h	/^}psid_priority_array;$/;"	t	typeref:struct:psid_priority_array
+psid_priority_ssp	data/data.h	/^typedef struct psid_priority_ssp{$/;"	s
+psid_priority_ssp	data/data.h	/^}psid_priority_ssp;$/;"	t	typeref:struct:psid_priority_ssp
+psid_priority_ssp_array	data/data.h	/^typedef struct psid_priority_ssp_array{$/;"	s
+psid_priority_ssp_array	data/data.h	/^}psid_priority_ssp_array;$/;"	t	typeref:struct:psid_priority_ssp_array
+psid_ssp	data/data.h	/^typedef struct psid_ssp{$/;"	s
+psid_ssp	data/data.h	/^}psid_ssp;$/;"	t	typeref:struct:psid_ssp
+psid_ssp_array	data/data.h	/^typedef struct psid_ssp_array{$/;"	s
+psid_ssp_array	data/data.h	/^}psid_ssp_array;$/;"	t	typeref:struct:psid_ssp_array
+public_key	data/data.h	/^            elliptic_curve_point public_key;$/;"	m	struct:public_key::__anon3::__anon4
+public_key	data/data.h	/^        elliptic_curve_point public_key;$/;"	m	union:public_key::__anon3
+public_key	data/data.h	/^typedef struct public_key{$/;"	s
+public_key	data/data.h	/^}public_key;$/;"	t	typeref:struct:public_key
+r	data/data.h	/^    elliptic_curve_point r;$/;"	m	struct:ecdsa_signature
+radius	data/data.h	/^    u16 radius;$/;"	m	struct:circular_region
+reason	data/data.h	/^    certificate_request_error_code reason;$/;"	m	struct:tobe_encrypted_certificate_request_error
+recipient_info	data/data.h	/^typedef struct recipient_info{$/;"	s
+recipient_info	data/data.h	/^}recipient_info;$/;"	t	typeref:struct:recipient_info
+reconstruction_value	data/data.h	/^        elliptic_curve_point reconstruction_value;$/;"	m	union:certificate::__anon16
+rectangular_region	data/data.h	/^typedef struct rectangular_region{$/;"	s
+rectangular_region	data/data.h	/^}rectangular_region;$/;"	t	typeref:struct:rectangular_region
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:anonymous_scope
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:identified_scope
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:root_ca_scope
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:sec_data_exch_ca_scope
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:wsa_ca_scope
+region	data/data.h	/^    geographic_region region;$/;"	m	struct:wsa_scope
+region_type	data/data.h	/^    region_type region_type;$/;"	m	struct:geographic_region
+region_type	data/data.h	/^typedef enum region_type{$/;"	g
+region_type	data/data.h	/^}region_type;$/;"	t	typeref:enum:region_type
+request	data/data.h	/^        certificate_request request;$/;"	m	union:tobe_encrypted::__anon25
+request_error	data/data.h	/^                request_error;$/;"	m	union:tobe_encrypted::__anon25
+request_hash	data/data.h	/^    u8 request_hash[10];$/;"	m	struct:tobe_encrypted_certificate_request_error
+request_time	data/data.h	/^    time32 request_time;$/;"	m	struct:tobesigned_certificate_request
+response	data/data.h	/^                response;$/;"	m	union:tobe_encrypted::__anon25
+response_encryption_key	data/data.h	/^    public_key response_encryption_key;$/;"	m	struct:tobesigned_certificate_request
+response_hash	data/data.h	/^    u8 response_hash[10];$/;"	m	struct:tobe_encrypted_certificate_response_acknowledgment
+responsible_series	data/data.h	/^        crl_series* responsible_series;$/;"	m	union:cert_specific_data::__anon11
+root_ca_scope	data/data.h	/^        root_ca_scope root_ca_scope;$/;"	m	union:cert_specific_data::__anon11
+root_ca_scope	data/data.h	/^typedef struct root_ca_scope{$/;"	s
+root_ca_scope	data/data.h	/^}root_ca_scope;$/;"	t	typeref:struct:root_ca_scope
+s16	utils/common.h	/^typedef short s16;$/;"	t
+s32	utils/common.h	/^typedef int s32;$/;"	t
+s64	utils/common.h	/^typedef long long s64;$/;"	t
+s8	utils/common.h	/^typedef char s8;$/;"	t
+scope	data/data.h	/^    cert_specific_data scope;$/;"	m	struct:tobesigned_certificate
+sde_ca_scope	data/data.h	/^        sec_data_exch_ca_scope sde_ca_scope;$/;"	m	union:cert_specific_data::__anon11
+sec_data	data/data.h	/^typedef struct sec_data{$/;"	s
+sec_data	data/data.h	/^}sec_data;$/;"	t	typeref:struct:sec_data
+sec_data_exch_ca_scope	data/data.h	/^typedef struct sec_data_exch_ca_scope{$/;"	s
+sec_data_exch_ca_scope	data/data.h	/^}sec_data_exch_ca_scope;$/;"	t	typeref:struct:sec_data_exch_ca_scope
+secure_data_permissions	data/data.h	/^        psid_array secure_data_permissions;$/;"	m	struct:root_ca_scope::__anon10
+signature	data/data.h	/^        signature signature;$/;"	m	union:certificate::__anon16
+signature	data/data.h	/^    signature  signature;$/;"	m	struct:crl
+signature	data/data.h	/^    signature signature;$/;"	m	struct:certificate_request
+signature	data/data.h	/^    signature signature;$/;"	m	struct:signed_wsa
+signature	data/data.h	/^    signature signature;$/;"	m	struct:tobe_encrypted_certificate_request_error
+signature	data/data.h	/^    struct signature signature;$/;"	m	struct:signed_data	typeref:struct:signed_data::signature
+signature	data/data.h	/^typedef struct signature{$/;"	s
+signature	data/data.h	/^}signature;$/;"	t	typeref:struct:signature
+signature_alg	data/data.h	/^            pk_algorithm signature_alg;$/;"	m	struct:tobesigned_certificate::__anon12::__anon13
+signed_data	data/data.h	/^		struct signed_data signed_data;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::signed_data
+signed_data	data/data.h	/^        signed_data signed_data;$/;"	m	union:tobe_encrypted::__anon25
+signed_data	data/data.h	/^typedef struct signed_data{$/;"	s
+signed_data	data/data.h	/^}signed_data;$/;"	t	typeref:struct:signed_data
+signed_wsa	data/data.h	/^		struct signed_wsa signed_wsa;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::signed_wsa
+signed_wsa	data/data.h	/^typedef struct signed_wsa{$/;"	s
+signed_wsa	data/data.h	/^}signed_wsa;$/;"	t	typeref:struct:signed_wsa
+signer	data/data.h	/^    signer_identifier signer;$/;"	m	struct:certificate_request
+signer	data/data.h	/^    signer_identifier signer;$/;"	m	struct:crl
+signer	data/data.h	/^    signer_identifier signer;$/;"	m	struct:signed_wsa
+signer	data/data.h	/^    signer_identifier signer;$/;"	m	struct:tobe_encrypted_certificate_request_error
+signer	data/data.h	/^    struct signer_identifier signer;$/;"	m	struct:signed_data	typeref:struct:signed_data::signer_identifier
+signer_id	data/data.h	/^            hashedid8 signer_id;$/;"	m	struct:tobesigned_certificate::__anon12::__anon13
+signer_identifier	data/data.h	/^typedef struct signer_identifier{$/;"	s
+signer_identifier	data/data.h	/^} signer_identifier;$/;"	t	typeref:struct:signer_identifier
+signer_identifier_type	data/data.h	/^typedef enum signer_identifier_type{$/;"	g
+signer_identifier_type	data/data.h	/^}signer_identifier_type;$/;"	t	typeref:enum:signer_identifier_type
+south_east	data/data.h	/^    two_d_location south_east;$/;"	m	struct:rectangular_region
+start_period	data/data.h	/^    time32 start_period;$/;"	m	struct:tobesigned_crl
+start_validity	data/data.h	/^        time32 start_validity;$/;"	m	struct:tobesigned_certificate::__anon15
+start_validity	data/data.h	/^        time32 start_validity;$/;"	m	struct:tobesigned_certificate_request::__anon21
+string	utils/string.h	/^struct string{$/;"	s
+supported_symm_alg	data/data.h	/^            symm_algorithm supported_symm_alg;$/;"	m	struct:public_key::__anon3::__anon4
+symm_algorithm	data/data.h	/^    symm_algorithm symm_algorithm;$/;"	m	struct:encrypted_data
+symm_algorithm	data/data.h	/^typedef enum symm_algorithm{$/;"	g
+symm_algorithm	data/data.h	/^}symm_algorithm;$/;"	t	typeref:enum:symm_algorithm
+t	data/data.h	/^    u8 t[20];$/;"	m	struct:ecies_nist_p256_encrypted_key
+tbsdata_extension	data/data.h	/^typedef struct tbsdata_extension{$/;"	s
+tbsdata_extension	data/data.h	/^}tbsdata_extension;$/;"	t	typeref:struct:tbsdata_extension
+tbsdata_extension_type	data/data.h	/^typedef enum tbsdata_extension_type{$/;"	g
+tbsdata_extension_type	data/data.h	/^} tbsdata_extension_type;$/;"	t	typeref:enum:tbsdata_extension_type
+tbsdata_flags	data/data.h	/^typedef enum tbsdata_flags{$/;"	g
+tbsdata_flags	data/data.h	/^}tbsdata_flags;$/;"	t	typeref:enum:tbsdata_flags
+tf	data/data.h	/^    tbsdata_flags tf;$/;"	m	struct:tobesigned_wsa
+tf	data/data.h	/^   tbsdata_flags tf;$/;"	m	struct:tobesigned_data
+three_d_location	data/data.h	/^typedef struct three_d_location{$/;"	s
+three_d_location	data/data.h	/^}three_d_location;$/;"	t	typeref:struct:three_d_location
+time	data/data.h	/^    time64 time;$/;"	m	struct:time64_with_standard_deviation
+time32	data/data.h	/^typedef u32 time32;$/;"	t
+time64	data/data.h	/^typedef u64 time64;$/;"	t
+time64_with_standard_deviation	data/data.h	/^typedef struct time64_with_standard_deviation{$/;"	s
+time64_with_standard_deviation	data/data.h	/^}time64_with_standard_deviation;$/;"	t	typeref:struct:time64_with_standard_deviation
+tobe_encrypted	data/data.h	/^typedef struct tobe_encrypted{$/;"	s
+tobe_encrypted	data/data.h	/^}tobe_encrypted;$/;"	t	typeref:struct:tobe_encrypted
+tobe_encrypted_anonymous_cert_response	data/data.h	/^typedef enum tobe_encrypted_anonymous_cert_response{$/;"	g
+tobe_encrypted_anonymous_cert_response	data/data.h	/^}tobe_encrypted_anonymous_cert_response;$/;"	t	typeref:enum:tobe_encrypted_anonymous_cert_response
+tobe_encrypted_certificate_request_error	data/data.h	/^typedef struct tobe_encrypted_certificate_request_error{$/;"	s
+tobe_encrypted_certificate_request_error	data/data.h	/^}tobe_encrypted_certificate_request_error;$/;"	t	typeref:struct:tobe_encrypted_certificate_request_error
+tobe_encrypted_certificate_response	data/data.h	/^typedef struct tobe_encrypted_certificate_response{$/;"	s
+tobe_encrypted_certificate_response	data/data.h	/^}tobe_encrypted_certificate_response;$/;"	t	typeref:struct:tobe_encrypted_certificate_response
+tobe_encrypted_certificate_response_acknowledgment	data/data.h	/^typedef struct tobe_encrypted_certificate_response_acknowledgment{$/;"	s
+tobe_encrypted_certificate_response_acknowledgment	data/data.h	/^}tobe_encrypted_certificate_response_acknowledgment;$/;"	t	typeref:struct:tobe_encrypted_certificate_response_acknowledgment
+tobesigned_certificate	data/data.h	/^typedef struct tobesigned_certificate{$/;"	s
+tobesigned_certificate	data/data.h	/^}tobesigned_certificate;$/;"	t	typeref:struct:tobesigned_certificate
+tobesigned_certificate_request	data/data.h	/^typedef struct tobesigned_certificate_request{$/;"	s
+tobesigned_certificate_request	data/data.h	/^}tobesigned_certificate_request;$/;"	t	typeref:struct:tobesigned_certificate_request
+tobesigned_crl	data/data.h	/^typedef struct tobesigned_crl{$/;"	s
+tobesigned_crl	data/data.h	/^}tobesigned_crl;$/;"	t	typeref:struct:tobesigned_crl
+tobesigned_data	data/data.h	/^typedef struct tobesigned_data{$/;"	s
+tobesigned_data	data/data.h	/^}tobesigned_data;$/;"	t	typeref:struct:tobesigned_data
+tobesigned_wsa	data/data.h	/^typedef struct tobesigned_wsa{$/;"	s
+tobesigned_wsa	data/data.h	/^}tobesigned_wsa;$/;"	t	typeref:struct:tobesigned_wsa
+two_d_location	data/data.h	/^typedef struct two_d_location{$/;"	s
+two_d_location	data/data.h	/^}two_d_location;$/;"	t	typeref:struct:two_d_location
+type	data/data.h	/^	content_type type;$/;"	m	struct:sec_data
+type	data/data.h	/^    array_type type;$/;"	m	struct:psid_array
+type	data/data.h	/^    array_type type;$/;"	m	struct:psid_priority_array
+type	data/data.h	/^    array_type type;$/;"	m	struct:psid_priority_ssp_array
+type	data/data.h	/^    array_type type;$/;"	m	struct:psid_ssp_array
+type	data/data.h	/^    content_type type;$/;"	m	struct:tobe_encrypted
+type	data/data.h	/^    crl_type type;$/;"	m	struct:tobesigned_crl
+type	data/data.h	/^    ecc_public_keytype type;$/;"	m	struct:elliptic_curve_point
+type	data/data.h	/^    signer_identifier_type type;$/;"	m	struct:signer_identifier
+type	data/data.h	/^    tbsdata_extension_type type;$/;"	m	struct:tbsdata_extension
+type_signed	data/data.h	/^        }type_signed,type_signed_partical;$/;"	m	union:tobesigned_data::__anon22	typeref:struct:tobesigned_data::__anon22::__anon23
+type_signed_partical	data/data.h	/^        }type_signed,type_signed_partical;$/;"	m	union:tobesigned_data::__anon22	typeref:struct:tobesigned_data::__anon22::__anon23
+type_specific_data	data/data.h	/^    cert_specific_data type_specific_data;$/;"	m	struct:tobesigned_certificate_request
+u	data/data.h	/^	}u;$/;"	m	struct:sec_data	typeref:union:sec_data::__anon29
+u	data/data.h	/^    }u;    $/;"	m	struct:tobe_encrypted_certificate_response	typeref:union:tobe_encrypted_certificate_response::__anon20
+u	data/data.h	/^    }u;$/;"	m	struct:cert_specific_data	typeref:union:cert_specific_data::__anon11
+u	data/data.h	/^    }u;$/;"	m	struct:certificate	typeref:union:certificate::__anon16
+u	data/data.h	/^    }u;$/;"	m	struct:elliptic_curve_point	typeref:union:elliptic_curve_point::__anon1
+u	data/data.h	/^    }u;$/;"	m	struct:encrypted_data	typeref:union:encrypted_data::__anon27
+u	data/data.h	/^    }u;$/;"	m	struct:geographic_region	typeref:union:geographic_region::__anon5
+u	data/data.h	/^    }u;$/;"	m	struct:psid_array	typeref:union:psid_array::__anon7
+u	data/data.h	/^    }u;$/;"	m	struct:psid_priority_array	typeref:union:psid_priority_array::__anon6
+u	data/data.h	/^    }u;$/;"	m	struct:psid_priority_ssp_array	typeref:union:psid_priority_ssp_array::__anon9
+u	data/data.h	/^    }u;$/;"	m	struct:psid_ssp_array	typeref:union:psid_ssp_array::__anon8
+u	data/data.h	/^    }u;$/;"	m	struct:public_key	typeref:union:public_key::__anon3
+u	data/data.h	/^    }u;$/;"	m	struct:recipient_info	typeref:union:recipient_info::__anon26
+u	data/data.h	/^    }u;$/;"	m	struct:signature	typeref:union:signature::__anon2
+u	data/data.h	/^    }u;$/;"	m	struct:signer_identifier	typeref:union:signer_identifier::__anon17
+u	data/data.h	/^    }u;$/;"	m	struct:tobe_encrypted	typeref:union:tobe_encrypted::__anon25
+u	data/data.h	/^    }u;$/;"	m	struct:tobesigned_certificate	typeref:union:tobesigned_certificate::__anon12
+u	data/data.h	/^    }u;$/;"	m	struct:tobesigned_crl	typeref:union:tobesigned_crl::__anon19
+u	data/data.h	/^   }u;$/;"	m	struct:tobesigned_data	typeref:union:tobesigned_data::__anon22
+u16	utils/common.h	/^typedef unsigned short u16;$/;"	t
+u32	utils/common.h	/^typedef unsigned int u32;$/;"	t
+u64	utils/common.h	/^typedef unsigned long long u64;$/;"	t
+u8	utils/common.h	/^typedef unsigned char u8;$/;"	t
+unsigend_certificate	data/data.h	/^    tobesigned_certificate unsigend_certificate;$/;"	m	struct:certificate
+unsigned_crl	data/data.h	/^    tobesigned_crl  unsigned_crl;$/;"	m	struct:crl
+unsigned_csr	data/data.h	/^    tobesigned_certificate_request unsigned_csr;$/;"	m	struct:certificate_request
+unsigned_data	data/data.h	/^    struct tobesigned_data unsigned_data;$/;"	m	struct:signed_data	typeref:struct:signed_data::tobesigned_data
+unsigned_wsa	data/data.h	/^    tobesigned_wsa unsigned_wsa;$/;"	m	struct:signed_wsa
+v	data/data.h	/^    elliptic_curve_point  v;$/;"	m	struct:ecies_nist_p256_encrypted_key
+verification_key	data/data.h	/^        public_key verification_key;$/;"	m	union:tobesigned_certificate::__anon14
+verification_key	data/data.h	/^    public_key verification_key;$/;"	m	struct:tobesigned_certificate_request
+verion_and_type	data/data.h	/^    }verion_and_type;$/;"	m	struct:tobesigned_certificate	typeref:union:tobesigned_certificate::__anon14
+version	data/data.h	/^    u8 version;$/;"	m	struct:crl
+version_and_type	data/data.h	/^    u8 version_and_type;$/;"	m	struct:certificate
+version_and_type	data/data.h	/^    u8 version_and_type;$/;"	m	struct:tobesigned_certificate_request
+wsa_ca_scope	data/data.h	/^        wsa_ca_scope wsa_ca_scope;$/;"	m	union:cert_specific_data::__anon11
+wsa_ca_scope	data/data.h	/^typedef struct wsa_ca_scope{$/;"	s
+wsa_ca_scope	data/data.h	/^}wsa_ca_scope;$/;"	t	typeref:struct:wsa_ca_scope
+wsa_permissions	data/data.h	/^        psid_priority_array wsa_permissions;$/;"	m	struct:root_ca_scope::__anon10
+wsa_scope	data/data.h	/^        wsa_scope wsa_scope;$/;"	m	union:cert_specific_data::__anon11
+wsa_scope	data/data.h	/^typedef struct wsa_scope{$/;"	s
+wsa_scope	data/data.h	/^}wsa_scope;$/;"	t	typeref:struct:wsa_scope

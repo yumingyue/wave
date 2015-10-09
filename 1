@@ -1,0 +1,57 @@
+#ifndef DATA_H
+#define DATA_H
+#include "../utils/common.h"
+struct hashedid8;
+struct certificate;
+struct pk_algorithm;
+struct signer_identifier{
+    signer_identifier_type type;
+    union{
+        struct hashedid8 digest;
+        struct certificate certificate;
+        struct{
+            pk_algorithm algorithm;
+            hashedid8 digest;
+        }STRUCT_PACKED other_algorithm;
+
+        struct u8* varible;
+    }u;
+}STRUCT_PACKED;
+
+struct signed_data{
+    signer_identifier signer;
+    tobesigned_data unsigned_data;
+    signature signature;
+}STRUCT_PACKED;
+
+typedef u16 content_type;
+content_type UNSECURED = 0;
+content_type SIGNED = 1;
+content_type ENCRYPTED = 2;
+content_type CERTIFICATE_REQUEST = 3;
+content_type CERTIFICATE_RESPONSE = 4;
+content_type ANOYMOUS_CERTIFICATE_RESPONSE = 5;
+content_type CERTIFICATE_REQUSET_ERROR = 6;
+content_type content_typeCRL_REQUEST = 7;
+content_type CRL = 8;
+content_type SIGEND_PARTIAL_PAYLOAD = 9;
+content_type SIGNED_EXTERNAL_PAYLOAD = 10;
+content_type SIGNED_WSA = 11;
+content_type CERTIFACATE_RESPONSE_ACKNOWLEDGMENT = 12;
+//注意这个必须是两字节，剩下的指用户可以自定义
+
+
+struct sec_data{
+	u8 protocol_version;
+	enum content_type type;
+	union
+	{
+		u8 *data;
+		struct signed_data signed_data;
+		struct signed_wsa signed_wsa;
+		struct encrypted_data encrypted_data;
+		struct crl_request crl_request;
+		struct crl crl;
+	} select_type ;
+}STRUCT_PACKED;
+#endif
