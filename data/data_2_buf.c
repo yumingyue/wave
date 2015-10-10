@@ -34,7 +34,7 @@ static inline tobuf64(u8* buf,u64 value){
     *buf++ = getchar8(value);
 }
 static void varible_len1_encoding(u8* buf,u8 len){
-    *buf = size;
+    *buf = len;
 }
 static void varible_len2_encoding(u8* buf,u16 len){
     u16 size = 0x8000;
@@ -150,7 +150,8 @@ static u32 varible_len_calculate(u8* buf,u64 len){
     return 8;
         
 }
-}
+
+
 u32 sec_data_2_buf(const sec_data *sec_data,u8* buf,u32 len){
     u8* mbuf = buf;
     u32 size = len;

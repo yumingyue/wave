@@ -1,0 +1,23 @@
+#ifndef COMMON_H
+#define COMMON_H
+
+#include"../utils/common.h"
+
+#define LSIS u16
+#define SUCCESS 0
+#define FAILURE 1
+typedef enum action{
+    ADD = 1;
+    DELETE = 2;
+}action;
+typedef u16 lsis;
+typedef u16 result;
+typedef u8 priority;
+/**
+ * 申请一个pssme lsis;
+ */
+lsis pssme_lsis_request();
+result pssme_sps_register(lsis lsis,action action,
+                   string psid,priority priority,string ssp);
+#endif
+
