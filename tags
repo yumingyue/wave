@@ -27,6 +27,7 @@ COMPRESSED_LSB_Y_1	data/data.h	/^    COMPRESSED_LSB_Y_1 = 3,$/;"	e	enum:ecc_publ
 CONTENT_TYPE_CRL_REQUEST	data/data.h	/^    CONTENT_TYPE_CRL_REQUEST = 7,$/;"	e	enum:content_type
 CRL	data/data.h	/^    CRL = 8,$/;"	e	enum:content_type
 CRL_SIGNER	data/data.h	/^    CRL_SIGNER = 8,$/;"	e	enum:holder_type
+CURRETN_VERSION	data/buf_2_data.c	10;"	d	file:
 DATA_H	data/data.h	2;"	d
 DATA_HANDLE_H	data/data_handle.h	2;"	d
 ECDSA_NISTP224_WITH_SHA224	data/data.h	/^    ECDSA_NISTP224_WITH_SHA224 = 0,$/;"	e	enum:pk_algorithm
@@ -79,7 +80,7 @@ STRUCT_PACKED	utils/common.h	24;"	d
 SUCCESS	data/data_handle.h	/^u32 SUCCESS = 0;$/;"	v
 UNCOMPRESSED	data/data.h	/^    UNCOMPRESSED = 4,$/;"	e	enum:ecc_public_keytype
 UNSECURED	data/data.h	/^    UNSECURED = 0,$/;"	e	enum:content_type
-UNSED	data/data.h	/^    UNSED = 0,$/;"	e	enum:tobe_encrypted_anonymous_cert_response
+UNSED	data/data.h	/^    UNSED = 0,				\/\/unused?$/;"	e	enum:tobe_encrypted_anonymous_cert_response
 UNUSED	data/data.h	/^    UNUSED = 0,$/;"	e	enum:tbsdata_extension_type
 USE_GENERATION_TIME	data/data.h	/^    USE_GENERATION_TIME = 1<<0,$/;"	e	enum:tbsdata_flags
 USE_LOCATION	data/data.h	/^    USE_LOCATION = 1<<2,$/;"	e	enum:tbsdata_flags
@@ -104,7 +105,7 @@ be_to_host16	utils/common.h	5;"	d
 be_to_host32	utils/common.h	6;"	d
 be_to_host64	utils/common.h	7;"	d
 buf	utils/string.h	/^    u8 *buf;$/;"	m	struct:string
-buf_2_sec_data	data/data_free.c	/^void buf_2_sec_data(u8* buf,u32 len,sec_data* sec_data){$/;"	f
+buf_2_sec_data	data/buf_2_data.c	/^u32 buf_2_sec_data(const u8* buf,const u32 len, sec_data* sec_data){$/;"	f
 ca_id	data/data.h	/^    hashedid8 ca_id;$/;"	m	struct:tobesigned_crl
 center	data/data.h	/^    two_d_location center;$/;"	m	struct:circular_region
 cert_id	data/data.h	/^    hashedid8 cert_id;$/;"	m	struct:recipient_info
@@ -182,9 +183,18 @@ generation_time	data/data.h	/^        time64_with_standard_deviation generation_
 generation_time	data/data.h	/^    time64_with_standard_deviation generation_time;$/;"	m	struct:tobesigned_wsa
 geographic_region	data/data.h	/^typedef struct geographic_region{$/;"	s
 geographic_region	data/data.h	/^}geographic_region;$/;"	t	typeref:struct:geographic_region
-get16	data/data_free.c	2;"	d	file:
-get32	data/data_free.c	3;"	d	file:
-get64	data/data_free.c	4;"	d	file:
+get16	data/buf_2_data.c	6;"	d	file:
+get32	data/buf_2_data.c	7;"	d	file:
+get64	data/buf_2_data.c	8;"	d	file:
+get8	data/buf_2_data.c	5;"	d	file:
+getchar1	data/data_2_buf.c	4;"	d	file:
+getchar2	data/data_2_buf.c	5;"	d	file:
+getchar3	data/data_2_buf.c	6;"	d	file:
+getchar4	data/data_2_buf.c	7;"	d	file:
+getchar5	data/data_2_buf.c	8;"	d	file:
+getchar6	data/data_2_buf.c	9;"	d	file:
+getchar7	data/data_2_buf.c	10;"	d	file:
+getchar8	data/data_2_buf.c	11;"	d	file:
 hashedid8	data/data.h	/^    u8 hashedid8[8];$/;"	m	struct:hashedid8
 hashedid8	data/data.h	/^typedef struct hashedid8{$/;"	s
 hashedid8	data/data.h	/^}hashedid8;$/;"	t	typeref:struct:hashedid8
@@ -302,6 +312,7 @@ sec_data	data/data.h	/^typedef struct sec_data{$/;"	s
 sec_data	data/data.h	/^}sec_data;$/;"	t	typeref:struct:sec_data
 sec_data_exch_ca_scope	data/data.h	/^typedef struct sec_data_exch_ca_scope{$/;"	s
 sec_data_exch_ca_scope	data/data.h	/^}sec_data_exch_ca_scope;$/;"	t	typeref:struct:sec_data_exch_ca_scope
+sec_data_free	data/data_free.c	/^void sec_data_free(sec_data* sec_data){$/;"	f
 secure_data_permissions	data/data.h	/^        psid_array secure_data_permissions;$/;"	m	struct:root_ca_scope::__anon10
 signature	data/data.h	/^        signature signature;$/;"	m	union:certificate::__anon16
 signature	data/data.h	/^    signature  signature;$/;"	m	struct:crl
@@ -374,6 +385,9 @@ tobesigned_data	data/data.h	/^typedef struct tobesigned_data{$/;"	s
 tobesigned_data	data/data.h	/^}tobesigned_data;$/;"	t	typeref:struct:tobesigned_data
 tobesigned_wsa	data/data.h	/^typedef struct tobesigned_wsa{$/;"	s
 tobesigned_wsa	data/data.h	/^}tobesigned_wsa;$/;"	t	typeref:struct:tobesigned_wsa
+tobuf16	data/data_2_buf.c	/^static inline tobuf16(u8* buf,u16 value){$/;"	f	file:
+tobuf32	data/data_2_buf.c	/^static inline tobuf32(u8* buf,u32 value){$/;"	f	file:
+tobuf64	data/data_2_buf.c	/^static inline tobuf64(u8* buf,u64 value){$/;"	f	file:
 two_d_location	data/data.h	/^typedef struct two_d_location{$/;"	s
 two_d_location	data/data.h	/^}two_d_location;$/;"	t	typeref:struct:two_d_location
 type	data/data.h	/^	content_type type;$/;"	m	struct:sec_data
@@ -418,6 +432,16 @@ unsigned_csr	data/data.h	/^    tobesigned_certificate_request unsigned_csr;$/;"	
 unsigned_data	data/data.h	/^    struct tobesigned_data unsigned_data;$/;"	m	struct:signed_data	typeref:struct:signed_data::tobesigned_data
 unsigned_wsa	data/data.h	/^    tobesigned_wsa unsigned_wsa;$/;"	m	struct:signed_wsa
 v	data/data.h	/^    elliptic_curve_point  v;$/;"	m	struct:ecies_nist_p256_encrypted_key
+varible_len1_encoding	data/data_2_buf.c	/^static void varible_len1_encoding(u8* buf,u8 len){$/;"	f	file:
+varible_len2_encoding	data/data_2_buf.c	/^static void varible_len2_encoding(u8* buf,u16 len){$/;"	f	file:
+varible_len3_encoding	data/data_2_buf.c	/^static void varible_len3_encoding(u8* buf,u32 len){$/;"	f	file:
+varible_len4_encoding	data/data_2_buf.c	/^static void varible_len4_encoding(u8* buf,u32 len){$/;"	f	file:
+varible_len5_encoding	data/data_2_buf.c	/^static void varible_len5_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len6_encoding	data/data_2_buf.c	/^static void varible_len6_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len7_encoding	data/data_2_buf.c	/^static void varible_len7_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len8_encoding	data/data_2_buf.c	/^static void varible_len8_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len_calculate	data/data_2_buf.c	/^static u32 varible_len_calculate(u8* buf,u64 len){$/;"	f	file:
+varible_len_encoding	data/data_2_buf.c	/^static void  varible_len_encoding(u8* buf,u64 len){$/;"	f	file:
 verification_key	data/data.h	/^        public_key verification_key;$/;"	m	union:tobesigned_certificate::__anon14
 verification_key	data/data.h	/^    public_key verification_key;$/;"	m	struct:tobesigned_certificate_request
 verion_and_type	data/data.h	/^    }verion_and_type;$/;"	m	struct:tobesigned_certificate	typeref:union:tobesigned_certificate::__anon14

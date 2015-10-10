@@ -1,7 +1,25 @@
+/*=============================================================================
+#
+# Author: 杨广华 - edesale@qq.com
+#
+# QQ : 374970456
+#
+# Last modified: 2015-10-09 16:30
+#
+# Filename: data.h
+#
+# Description:将需要单独释放的结构体进行释放，主要释放的是结构体中带有指针
+# 且指针指向一块分配了的内存/
+#
+=============================================================================*/
 #ifndef DATA_H
 #define DATA_H
 #include "../utils/common.h"
 
+
+/*
+ * ARRAY 中的buff需要释放1
+*/
 #define ARRAY(TYPE,name) struct{\
         TYPE* buf;\
         u16 len;} name
@@ -19,7 +37,7 @@ typedef enum tbsdata_extension_type{
     UNUSED = 0,
 } tbsdata_extension_type;
 typedef enum tobe_encrypted_anonymous_cert_response{
-    UNSED = 0,
+    UNUSED = 0,				//unused?
 }tobe_encrypted_anonymous_cert_response;
 
 
@@ -135,6 +153,8 @@ typedef struct time64_with_standard_deviation{
     u8 long_std_dev;
 }time64_with_standard_deviation;
 
+/*tbsdata_extension    需要释放 2
+*/
 typedef struct tbsdata_extension{
     tbsdata_extension_type type;
     ARRAY(u8,value);
@@ -155,7 +175,11 @@ typedef enum pk_algorithm{
     ECDSA_NISTP256_WITH_SHA256 = 1,
     ECIES_NISTP256 =2,
 }pk_algorithm;
-
+/*
+ *elliptic_curve_point 需要释放  3
+ *
+ *
+ */
 typedef struct elliptic_curve_point{
     ecc_public_keytype type;
     ARRAY(u8,x);
@@ -163,13 +187,20 @@ typedef struct elliptic_curve_point{
         ARRAY(u8,y);
     }u;
 }elliptic_curve_point;
-
+/*
+ *ecdsa_signature ，需要释放 4
+ *
+ */
 typedef struct ecdsa_signature{
     elliptic_curve_point r;
     ARRAY(u8,s);
 }ecdsa_signature;
 
-
+/*
+ *
+ *signature 开始释放。   5
+ *
+ */
 typedef struct signature{
     union{
         ecdsa_signature ecdsa_signature;
@@ -177,13 +208,17 @@ typedef struct signature{
     }u;
 }signature;
 
-
+/*
+ *
+ *public-key 需要释放6
+ *
+ */
 typedef struct public_key{
     pk_algorithm algorithm;
     union{
         elliptic_curve_point public_key;
         struct {
-            symm_algorithm supported_symm_alg;
+            symm_algorithm supported_symm_alg; 
             elliptic_curve_point public_key;
             ARRAY(u8,other_key);
         }ecies_nistp256;
@@ -197,16 +232,21 @@ typedef struct two_d_location{
 
 typedef two_d_location* polygonal_region;
 
+
+
 typedef struct rectangular_region{
     two_d_location north_west;
     two_d_location south_east;
 }rectangular_region;
 
+
 typedef struct circular_region{
     two_d_location center;
     u16 radius;
 }circular_region;
-
+/*
+ *需要释放     7
+ */
 typedef struct geographic_region{
     region_type region_type;
     union{
@@ -216,11 +256,17 @@ typedef struct geographic_region{
         ARRAY(u8,other_region);
     }u;
 }geographic_region;
-
+/*
+ *需要释放 8
+ */
 typedef struct psid_priority{
     psid psid;
     u8 max_priority;
 }psid_priority;
+
+/*
+ *需要释放 9
+ */
 
 typedef struct psid_priority_array{
     array_type type;
@@ -229,7 +275,9 @@ typedef struct psid_priority_array{
         ARRAY(u8,other_permissions);
     }u;
 }psid_priority_array;
-
+/*
+ *需要释放 10
+ */
 
 typedef struct psid_array{
     array_type type;
@@ -238,6 +286,13 @@ typedef struct psid_array{
         ARRAY(u8,other_permissions);
     }u;
 }psid_array;
+
+/*
+ *需要释放 11
+ */
+
+
+
 
 typedef struct psid_ssp{
     psid psid;
@@ -263,6 +318,49 @@ typedef struct psid_priority_ssp_array{
     union{
         ARRAY(psid_priority_ssp,permissions_list);
         ARRAY(u8,other_permissions);
+    }u;
+}psid_priority_ssp_array;
+
+typedef struct wsa_scope{
+    u8* name;
+    psid_priority_ssp_array permissions;
+    geographic_region region;
+}wsa_scope;
+
+typedef struct anonymous_scope{
+    ARRAY(u8,additionla_data);
+    psid_ssp_array permissions;
+    geographic_region region;
+}anonymous_scope;
+
+typedef struct identified_scope{
+    u8* name;
+    psid_ssp_array permissions;
+    geographic_region region;
+}identified_scope;
+
+typedef struct identified_not_localized_scope{
+    u8* name;
+    psid_ssp_array permissions;
+}identified_not_localized_scope;
+
+typedef struct wsa_ca_scope{
+    ARRAY(u8,name);
+    psid_priority_array permissions;
+    geographic_region region;
+}wsa_ca_scope;
+
+typedef struct sec_data_exch_ca_scope{
+    ARRAY(u8,name);
+    holder_type_flags permitted_holder_types;
+    psid_array permissions;
+    geographic_region region;
+}sec_data_exch_ca_scope;
+
+typedef struct root_ca_scope{
+    ARRAY(u8,name);
+    holder_type_flags permitted_holder_types;
+    struct{
     }u;
 }psid_priority_ssp_array;
 
@@ -397,49 +495,6 @@ typedef struct tobesigned_crl{
     u32 crl_serial;
     time32 start_period;
     time32 issue_date;
-    time32 next_crl;
-    union{
-        ARRAY(certid10,entries);
-        ARRAY(id_and_date,expiring_entries);
-        ARRAY(u8,other_entries);
-    }u;
-}tobesigned_crl;
-
-typedef struct crl{
-    u8 version;
-    signer_identifier signer;
-    tobesigned_crl  unsigned_crl;
-    signature  signature;
-}crl;
-typedef struct tobe_encrypted_certificate_response_acknowledgment{
-    u8 response_hash[10];
-}tobe_encrypted_certificate_response_acknowledgment;
-
-typedef struct tobe_encrypted_certificate_request_error{
-    signer_identifier signer;
-    u8 request_hash[10];
-    certificate_request_error_code reason;
-    signature signature;
-}tobe_encrypted_certificate_request_error;
-
-typedef struct tobe_encrypted_certificate_response{
-    u8 f;//这个地方在协议中是flag，可能是说一bite的意思，这个我们后面在看。
-    ARRAY(certificate,certificate_chain);
-    union{
-        ARRAY(u8,recon_priv);
-        ARRAY(u8,other_material);
-    }u;    
-    ARRAY(crl,crl_path);
-}tobe_encrypted_certificate_response;
-
-typedef struct tobesigned_certificate_request{
-    u8 version_and_type;
-    time32 request_time;
-    holder_type holder_type;
-    certificate_content_flags cf;
-    cert_specific_data type_specific_data;
-    time32 expiration;
-    struct{
         certificate_duration lifetime;
         time32 start_validity;
         public_key encryption_key;
