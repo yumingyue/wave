@@ -1,10 +1,10 @@
 #ifndef STRING_H
 #define STRING_H
 #include "common.h"
-struct string{
+typedef struct string{
     u8 *buf;
     u16 len;
-}
+}string;
 /**
  * 分配一个string的指针，并且buf分配指定长度
  */

@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-/*============================================================================
-=======
 /*=============================================================================
 >>>>>>> 93428c7c50a070f55cc512331fed8b68b51d667b
 #
@@ -44,7 +41,7 @@ static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point
 		array_free(&elliptic_curve_point->x);
 
 	if(elliptic_curve_point->type == uncompressed)
-		if(NULL != elliptic_curve_point->y.buf)
+		if(NULL != elliptic_curve_point->u.y.buf)
 			array_free(&elliptic_curve_point->u.y);
 }
 /*
