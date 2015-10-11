@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+/*============================================================================
+=======
 /*=============================================================================
+>>>>>>> 93428c7c50a070f55cc512331fed8b68b51d667b
 #
 # Author: 杨广华 - edesale@qq.com
 #
@@ -15,31 +19,38 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-/*YGH 1
- *对 struct{
- *		TYPE* buf;
- *		u16 len;}的释放
+/**
+ * YGH 1
  */
-
 static void array_free(void **addr){
 	free(*addr);
 	*addr = NULL;
 }
 
-/*	
- *	YGH 2
+/**	
+ * YGH 2
  */
-
 static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
 	if(NULL == tbsdata_extension->value.buf)
 		return ;
 	array_free(&tbsdata_extension->value);
 }
 
-
-/*YGH 3
- *
+/**
+ * YGH 3
  */
+static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){
+	if(NULL != elliptic_curve_point->x.buf)  
+		array_free(&elliptic_curve_point->x);
+
+	if(elliptic_curve_point->type == uncompressed)
+		if(NULL != elliptic_curve_point->y.buf)
+			array_free(&elliptic_curve_point->u.y);
+}
+/*
+ * YGH  4
+*/
+
 static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){
 	if(NULL != elliptic_curve_point->x.buf)  
 		free(&elliptic_curve_point->x);
@@ -57,6 +68,78 @@ static void ecdsa_signature_free(ecdsa_signature* ecdsa_signature){
 
 	if(NULL != ecdsa_signature->s.buf)
 		free(&ecdsa_signature->s);
+}
+
+
+/*
+ * YGH  5 
+ * @signature* 需要释放的结构体
+ * @pk_algorithm 外部传入参数,看协议中signature的定义
+ */
+static void signature_free(signature* signature, pk_algorithm pk_algorithm  ){
+	switch(pk_algorithm){
+		case ECDSA_NISTP224_WITH_SHA224:
+			break;
+		case ECDSA_NISTP256_WITH_SHA256:
+			ecdsa_signature_free(&signature->u.ecdsa_signature);
+			break;
+		default:
+			array_free(&signature->u.signature);
+	}
+			
+}
+
+/*
+ * YGH 6
+ */
+
+static void public_key_free(public_key* public_key){
+	switch(public_key->algorithm){
+		case ECDSA_NISTP224_WITH_SHA224:
+			break;
+		case ECDSA_NISTP256_WITH_SHA256:
+			elliptic_curve_point_free(&public_key->u.public_key);
+			break;
+		case ECIES_NISTP256:
+			elliptic_curve_point_free(&public_key->u.public_key);
+			break;
+		default:
+			array_free(&public_key->u.other_key);
+			break;
+	}
+}
+
+/**
+ * YGH 7
+ */
+static void geographic_region_free(geographic_region* geographic_region){
+	switch(geographic_region->region_type){
+		case FROM_ISSUER:
+			break;
+		case CIRCLE:
+			break;
+		case RECTANGLE:
+			array_free(&rectangular_regionu->u.rectangular_region);
+		case POLYGON:
+			free(rectangular_region->u.polygonal_region);
+		case NONE:
+			break;
+		case default:
+			array_free(&geographic_region->u.other_region);
+	}
+}
+
+/**
+ * YGH 8
+ */
+
+static void psid_priority_free(psid_priority*  psid_priority){
+	free(psid_priority->psid);
+}
+
+/**
+ * YGH 9
+ */
 }
 
 

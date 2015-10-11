@@ -1,7 +1,20 @@
+/*=============================================================================
+#
+# Author: 杨广华 - edesale@qq.com
+#
+# QQ : 374970456
+#
+# Last modified: 2015-10-10 18:02
+#
+# Filename: data_2_buf.c
+#
+# Description: 
+#
+=============================================================================*/
 #include"data_handle.h"
 #include"stddef.h"
 
-#define getchar1(n) *((char*)&n)
+#define getchar1(n) *((char*)&n)	//取n的基地址开始的两字节，下面依次类推
 #define getchar2(n) *((char*)&n + 1)
 #define getchar3(n) *((char*)&n + 2)
 #define getchar4(n) *((char*)&n + 3)
@@ -10,7 +23,7 @@
 #define getchar7(n) *((char*)&n + 6)
 #define getchar8(n) *((char*)&n + 7)
 
-static inline tobuf32(u8* buf,u32 value){
+static inline tobuf32(u8* buf,u32 value){	//将 
     value = host_to_be32(value);
     *buf++ = getchar1(value);
     *buf++ = getchar2(value);
@@ -148,10 +161,8 @@ static u32 varible_len_calculate(u8* buf,u64 len){
         return 7;
     }
     return 8;
-        
 }
-
-
+        
 u32 sec_data_2_buf(const sec_data *sec_data,u8* buf,u32 len){
     u8* mbuf = buf;
     u32 size = len;
