@@ -27,6 +27,7 @@ COMPRESSED_LSB_Y_1	data/data.h	/^    COMPRESSED_LSB_Y_1 = 3,$/;"	e	enum:ecc_publ
 CONTENT_TYPE_CRL_REQUEST	data/data.h	/^    CONTENT_TYPE_CRL_REQUEST = 7,$/;"	e	enum:content_type
 CRL	data/data.h	/^    CRL = 8,$/;"	e	enum:content_type
 CRL_SIGNER	data/data.h	/^    CRL_SIGNER = 8,$/;"	e	enum:holder_type
+CURRETN_VERSION	data/buf_2_data.c	10;"	d	file:
 DATA_H	data/data.h	2;"	d
 DATA_HANDLE_H	data/data_handle.h	2;"	d
 ECDSA_NISTP224_WITH_SHA224	data/data.h	/^    ECDSA_NISTP224_WITH_SHA224 = 0,$/;"	e	enum:pk_algorithm
@@ -98,13 +99,14 @@ anon_response	data/data.h	/^                anon_response;$/;"	m	union:tobe_encr
 anonymous_scope	data/data.h	/^        anonymous_scope anonymous_scope;$/;"	m	union:cert_specific_data::__anon11
 anonymous_scope	data/data.h	/^typedef struct anonymous_scope{$/;"	s
 anonymous_scope	data/data.h	/^}anonymous_scope;$/;"	t	typeref:struct:anonymous_scope
+array_free	data/data_free.c	/^static void array_free(void **addr){$/;"	f	file:
 array_type	data/data.h	/^typedef enum array_type{$/;"	g
 array_type	data/data.h	/^}array_type;$/;"	t	typeref:enum:array_type
 be_to_host16	utils/common.h	5;"	d
 be_to_host32	utils/common.h	6;"	d
 be_to_host64	utils/common.h	7;"	d
 buf	utils/string.h	/^    u8 *buf;$/;"	m	struct:string
-buf_2_sec_data	data/data_free.c	/^void buf_2_sec_data(u8* buf,u32 len,sec_data* sec_data){$/;"	f
+buf_2_sec_data	data/buf_2_data.c	/^u32 buf_2_sec_data(const u8* buf,const u32 len, sec_data* sec_data){$/;"	f
 ca_id	data/data.h	/^    hashedid8 ca_id;$/;"	m	struct:tobesigned_crl
 center	data/data.h	/^    two_d_location center;$/;"	m	struct:circular_region
 cert_id	data/data.h	/^    hashedid8 cert_id;$/;"	m	struct:recipient_info
@@ -153,12 +155,14 @@ ecc_public_keytype	data/data.h	/^}ecc_public_keytype;$/;"	t	typeref:enum:ecc_pub
 ecdsa_signature	data/data.h	/^        ecdsa_signature ecdsa_signature;$/;"	m	union:signature::__anon2
 ecdsa_signature	data/data.h	/^typedef struct ecdsa_signature{$/;"	s
 ecdsa_signature	data/data.h	/^}ecdsa_signature;$/;"	t	typeref:struct:ecdsa_signature
+ecdsa_signature_free	data/data_free.c	/^static void ecdsa_signature_free(ecdsa_signature* ecdsa_signature){$/;"	f	file:
 ecies_nist_p256_encrypted_key	data/data.h	/^typedef struct ecies_nist_p256_encrypted_key{$/;"	s
 ecies_nist_p256_encrypted_key	data/data.h	/^}ecies_nist_p256_encrypted_key;$/;"	t	typeref:struct:ecies_nist_p256_encrypted_key
 ecies_nistp256	data/data.h	/^        }ecies_nistp256;$/;"	m	union:public_key::__anon3	typeref:struct:public_key::__anon3::__anon4
 elevation	data/data.h	/^    u8 elevation[2];$/;"	m	struct:three_d_location
 elliptic_curve_point	data/data.h	/^typedef struct elliptic_curve_point{$/;"	s
 elliptic_curve_point	data/data.h	/^}elliptic_curve_point;$/;"	t	typeref:struct:elliptic_curve_point
+elliptic_curve_point_free	data/data_free.c	/^static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){$/;"	f	file:
 enc_key	data/data.h	/^        ecies_nist_p256_encrypted_key enc_key;$/;"	m	union:recipient_info::__anon26
 encrypted_data	data/data.h	/^		struct encrypted_data encrypted_data;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::encrypted_data
 encrypted_data	data/data.h	/^typedef struct encrypted_data{$/;"	s
@@ -182,9 +186,19 @@ generation_time	data/data.h	/^        time64_with_standard_deviation generation_
 generation_time	data/data.h	/^    time64_with_standard_deviation generation_time;$/;"	m	struct:tobesigned_wsa
 geographic_region	data/data.h	/^typedef struct geographic_region{$/;"	s
 geographic_region	data/data.h	/^}geographic_region;$/;"	t	typeref:struct:geographic_region
-get16	data/data_free.c	2;"	d	file:
-get32	data/data_free.c	3;"	d	file:
-get64	data/data_free.c	4;"	d	file:
+geographic_region_free	data/data_free.c	/^static void geographic_region_free(geographic_region* geographic_region){$/;"	f	file:
+get16	data/buf_2_data.c	6;"	d	file:
+get32	data/buf_2_data.c	7;"	d	file:
+get64	data/buf_2_data.c	8;"	d	file:
+get8	data/buf_2_data.c	5;"	d	file:
+getchar1	data/data_2_buf.c	4;"	d	file:
+getchar2	data/data_2_buf.c	5;"	d	file:
+getchar3	data/data_2_buf.c	6;"	d	file:
+getchar4	data/data_2_buf.c	7;"	d	file:
+getchar5	data/data_2_buf.c	8;"	d	file:
+getchar6	data/data_2_buf.c	9;"	d	file:
+getchar7	data/data_2_buf.c	10;"	d	file:
+getchar8	data/data_2_buf.c	11;"	d	file:
 hashedid8	data/data.h	/^    u8 hashedid8[8];$/;"	m	struct:hashedid8
 hashedid8	data/data.h	/^typedef struct hashedid8{$/;"	s
 hashedid8	data/data.h	/^}hashedid8;$/;"	t	typeref:struct:hashedid8
@@ -252,6 +266,7 @@ psid_priority	data/data.h	/^typedef struct psid_priority{$/;"	s
 psid_priority	data/data.h	/^}psid_priority;$/;"	t	typeref:struct:psid_priority
 psid_priority_array	data/data.h	/^typedef struct psid_priority_array{$/;"	s
 psid_priority_array	data/data.h	/^}psid_priority_array;$/;"	t	typeref:struct:psid_priority_array
+psid_priority_free	data/data_free.c	/^static void psid_priority_free(psid_priority*  psid_priority){$/;"	f	file:
 psid_priority_ssp	data/data.h	/^typedef struct psid_priority_ssp{$/;"	s
 psid_priority_ssp	data/data.h	/^}psid_priority_ssp;$/;"	t	typeref:struct:psid_priority_ssp
 psid_priority_ssp_array	data/data.h	/^typedef struct psid_priority_ssp_array{$/;"	s
@@ -264,6 +279,7 @@ public_key	data/data.h	/^            elliptic_curve_point public_key;$/;"	m	stru
 public_key	data/data.h	/^        elliptic_curve_point public_key;$/;"	m	union:public_key::__anon3
 public_key	data/data.h	/^typedef struct public_key{$/;"	s
 public_key	data/data.h	/^}public_key;$/;"	t	typeref:struct:public_key
+public_key_free	data/data_free.c	/^static void public_key_free(public_key* public_key){$/;"	f	file:
 r	data/data.h	/^    elliptic_curve_point r;$/;"	m	struct:ecdsa_signature
 radius	data/data.h	/^    u16 radius;$/;"	m	struct:circular_region
 reason	data/data.h	/^    certificate_request_error_code reason;$/;"	m	struct:tobe_encrypted_certificate_request_error
@@ -302,6 +318,7 @@ sec_data	data/data.h	/^typedef struct sec_data{$/;"	s
 sec_data	data/data.h	/^}sec_data;$/;"	t	typeref:struct:sec_data
 sec_data_exch_ca_scope	data/data.h	/^typedef struct sec_data_exch_ca_scope{$/;"	s
 sec_data_exch_ca_scope	data/data.h	/^}sec_data_exch_ca_scope;$/;"	t	typeref:struct:sec_data_exch_ca_scope
+sec_data_free	data/data_free.c	/^void sec_data_free(sec_data* sec_data){$/;"	f
 secure_data_permissions	data/data.h	/^        psid_array secure_data_permissions;$/;"	m	struct:root_ca_scope::__anon10
 signature	data/data.h	/^        signature signature;$/;"	m	union:certificate::__anon16
 signature	data/data.h	/^    signature  signature;$/;"	m	struct:crl
@@ -312,7 +329,8 @@ signature	data/data.h	/^    struct signature signature;$/;"	m	struct:signed_data
 signature	data/data.h	/^typedef struct signature{$/;"	s
 signature	data/data.h	/^}signature;$/;"	t	typeref:struct:signature
 signature_alg	data/data.h	/^            pk_algorithm signature_alg;$/;"	m	struct:tobesigned_certificate::__anon12::__anon13
-signed_data	data/data.h	/^		struct signed_data signed_data;$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::signed_data
+signature_free	data/data_free.c	/^static void signature_free(signature* signature, pk_algorithm pk_algorithm  ){$/;"	f	file:
+signed_data	data/data.h	/^		struct signed_data signed_data;\/\/（content_type)$/;"	m	union:sec_data::__anon29	typeref:struct:sec_data::__anon29::signed_data
 signed_data	data/data.h	/^        signed_data signed_data;$/;"	m	union:tobe_encrypted::__anon25
 signed_data	data/data.h	/^typedef struct signed_data{$/;"	s
 signed_data	data/data.h	/^}signed_data;$/;"	t	typeref:struct:signed_data
@@ -341,6 +359,7 @@ symm_algorithm	data/data.h	/^}symm_algorithm;$/;"	t	typeref:enum:symm_algorithm
 t	data/data.h	/^    u8 t[20];$/;"	m	struct:ecies_nist_p256_encrypted_key
 tbsdata_extension	data/data.h	/^typedef struct tbsdata_extension{$/;"	s
 tbsdata_extension	data/data.h	/^}tbsdata_extension;$/;"	t	typeref:struct:tbsdata_extension
+tbsdata_extension_free	data/data_free.c	/^static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{$/;"	f	file:
 tbsdata_extension_type	data/data.h	/^typedef enum tbsdata_extension_type{$/;"	g
 tbsdata_extension_type	data/data.h	/^} tbsdata_extension_type;$/;"	t	typeref:enum:tbsdata_extension_type
 tbsdata_flags	data/data.h	/^typedef enum tbsdata_flags{$/;"	g
@@ -374,6 +393,9 @@ tobesigned_data	data/data.h	/^typedef struct tobesigned_data{$/;"	s
 tobesigned_data	data/data.h	/^}tobesigned_data;$/;"	t	typeref:struct:tobesigned_data
 tobesigned_wsa	data/data.h	/^typedef struct tobesigned_wsa{$/;"	s
 tobesigned_wsa	data/data.h	/^}tobesigned_wsa;$/;"	t	typeref:struct:tobesigned_wsa
+tobuf16	data/data_2_buf.c	/^static inline tobuf16(u8* buf,u16 value){$/;"	f	file:
+tobuf32	data/data_2_buf.c	/^static inline tobuf32(u8* buf,u32 value){$/;"	f	file:
+tobuf64	data/data_2_buf.c	/^static inline tobuf64(u8* buf,u64 value){$/;"	f	file:
 two_d_location	data/data.h	/^typedef struct two_d_location{$/;"	s
 two_d_location	data/data.h	/^}two_d_location;$/;"	t	typeref:struct:two_d_location
 type	data/data.h	/^	content_type type;$/;"	m	struct:sec_data
@@ -418,6 +440,16 @@ unsigned_csr	data/data.h	/^    tobesigned_certificate_request unsigned_csr;$/;"	
 unsigned_data	data/data.h	/^    struct tobesigned_data unsigned_data;$/;"	m	struct:signed_data	typeref:struct:signed_data::tobesigned_data
 unsigned_wsa	data/data.h	/^    tobesigned_wsa unsigned_wsa;$/;"	m	struct:signed_wsa
 v	data/data.h	/^    elliptic_curve_point  v;$/;"	m	struct:ecies_nist_p256_encrypted_key
+varible_len1_encoding	data/data_2_buf.c	/^static void varible_len1_encoding(u8* buf,u8 len){$/;"	f	file:
+varible_len2_encoding	data/data_2_buf.c	/^static void varible_len2_encoding(u8* buf,u16 len){$/;"	f	file:
+varible_len3_encoding	data/data_2_buf.c	/^static void varible_len3_encoding(u8* buf,u32 len){$/;"	f	file:
+varible_len4_encoding	data/data_2_buf.c	/^static void varible_len4_encoding(u8* buf,u32 len){$/;"	f	file:
+varible_len5_encoding	data/data_2_buf.c	/^static void varible_len5_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len6_encoding	data/data_2_buf.c	/^static void varible_len6_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len7_encoding	data/data_2_buf.c	/^static void varible_len7_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len8_encoding	data/data_2_buf.c	/^static void varible_len8_encoding(u8* buf,u64 len){$/;"	f	file:
+varible_len_calculate	data/data_2_buf.c	/^static u32 varible_len_calculate(u8* buf,u64 len){$/;"	f	file:
+varible_len_encoding	data/data_2_buf.c	/^static void  varible_len_encoding(u8* buf,u64 len){$/;"	f	file:
 verification_key	data/data.h	/^        public_key verification_key;$/;"	m	union:tobesigned_certificate::__anon14
 verification_key	data/data.h	/^    public_key verification_key;$/;"	m	struct:tobesigned_certificate_request
 verion_and_type	data/data.h	/^    }verion_and_type;$/;"	m	struct:tobesigned_certificate	typeref:union:tobesigned_certificate::__anon14

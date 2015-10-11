@@ -560,7 +560,7 @@ typedef struct sec_data{
 	union
 	{
 		ARRAY(u8,data);
-		struct signed_data signed_data;
+		struct signed_data signed_data;//（content_type)
 		struct signed_wsa signed_wsa;
 		struct encrypted_data encrypted_data;
 		struct crl_request crl_request;
