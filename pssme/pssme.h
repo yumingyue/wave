@@ -1,14 +1,14 @@
 #ifndef PSSME_H
 #define PSSME_H
 
-#include "pssme_db.h"
-#include "../cme/cme_db.h"
+#include"../sec/sec.h"
 typedef enum result{
     SUCCESS = 0,
     FAILURE = 1,
     UNRECOGNIZED_LSIS = 2,
     INVAID_INPUT = 3,
     NOT_MATCH = 4,
+    NO_CERTIFICATE_FOUND = 6,
 }result;
 
 typedef enum action{
@@ -34,10 +34,11 @@ typedef struct lsis_array{
     u32 len;
 }lsis_array;
 
+
 /**
  * 申请一个pssme lsis;
  */
-pssme_lsis pssme_lsis_request(struct pssme_db* pdb;);
+pssme_lsis pssme_lsis_request(struct pssme_db* pdb);
 /**
  * 向pssme注册或者撤销一个服务相关的东西;
  * @lsis：该实体标示。
@@ -65,7 +66,7 @@ result pssme_get_serviceinfo(struct pssme_db* pdb,
  * @cmh：证书索引。
  * @liss_array:实体标示集合。
  **/
-result pssme_cryptomaterial_handle_storage(struct pssme_db* pdb,
+result pssme_cryptomaterial_handle_storage(struct sec_db* sdb,
                 cmh cmh,lsis_array* lsis_array);
 
 /**
@@ -76,7 +77,28 @@ result pssme_cryptomaterial_handle_storage(struct pssme_db* pdb,
 result pssme_outoforder(struct pssme_db* pdb,
                 u64 generation_time,certificate* cert);
 
-
+//这里我是随便定义的，这个结构题不应该属于这个范畴，我准备设计到其他地方。
+struct cert_chain{
+    struct list_head list;
+    certificate cert;
+};
+/**
+ * 这个主要是寻找签名wsa的证书。
+ * @sdb：整个数据库；
+ * @serviceinfo_array:需要满足的相关的一些权限。
+ * @two_d_location:位置
+ *
+ * @permission_ind：我们需要填充的，当给我们的时候，我们认为内存已经分配。
+ * @len:上面那个permission——ind最多可以填充多少个。
+ * @cmh：学着的证书的索引
+ * @cert_chain:证书链，这个调用者，我们可以认为是之分配好了这一个节点，我们需要自行填充，
+ *          然后让上层来释放这个链表（这个设计，在商榷哈）
+ */
+result pssme_cryptomaterial_handle(struct sec_db* sdb,serviceinfo_array* se_array,
+                    two_d_location* two_dl,
+                    string* permission_ind,u32 len,
+                    cmh* cmh,
+                    struct cert_chain* cert_chain);
 
 #endif
 
