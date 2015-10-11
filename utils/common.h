@@ -3,7 +3,7 @@
 #include <endian.h>
 
 #define be_to_host16(n) be16toh(n)
-#define be_to_host32(n) (__force u32)be32toh(n)
+#define be_to_host32(n) (__force u32)be32toh(n)//
 #define be_to_host64(n) (__force u64)be64toh(n)
 #define host_to_be16(n) (__force u16)htobe16(n)
 #define host_to_be32(n) (__force u32)htobe32(n)
