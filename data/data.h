@@ -1,7 +1,9 @@
 #ifndef DATA_H
 #define DATA_H
 #include "../utils/common.h"
-
+/*
+ * 1  free
+ */
 #define ARRAY(TYPE,name) struct{\
         TYPE* buf;\
         u16 len;} name
@@ -135,6 +137,10 @@ typedef struct time64_with_standard_deviation{
     u8 long_std_dev;
 }time64_with_standard_deviation;
 
+/*
+ * 2 free
+ */
+
 typedef struct tbsdata_extension{
     tbsdata_extension_type type;
     ARRAY(u8,value);
@@ -155,6 +161,9 @@ typedef enum pk_algorithm{
     ECDSA_NISTP256_WITH_SHA256 = 1,
     ECIES_NISTP256 =2,
 }pk_algorithm;
+/*
+ * 3 free
+ */
 
 typedef struct elliptic_curve_point{
     ecc_public_keytype type;
@@ -163,13 +172,17 @@ typedef struct elliptic_curve_point{
         ARRAY(u8,y);
     }u;
 }elliptic_curve_point;
-
+/*
+ * 4 free
+ */
 typedef struct ecdsa_signature{
     elliptic_curve_point r;
     ARRAY(u8,s);
 }ecdsa_signature;
 
-
+/*
+ * 5 free 
+ */
 typedef struct signature{
     union{
         ecdsa_signature ecdsa_signature;
@@ -177,7 +190,9 @@ typedef struct signature{
     }u;
 }signature;
 
-
+/*
+ * 6 free
+ */
 typedef struct public_key{
     pk_algorithm algorithm;
     union{
@@ -185,8 +200,8 @@ typedef struct public_key{
         struct {
             symm_algorithm supported_symm_alg;
             elliptic_curve_point public_key;
-            ARRAY(u8,other_key);
         }ecies_nistp256;
+     	ARRAY(u8,other_key);
     }u;
 }public_key;
 
@@ -206,7 +221,9 @@ typedef struct circular_region{
     two_d_location center;
     u16 radius;
 }circular_region;
-
+/*
+ * 7 free
+ */
 typedef struct geographic_region{
     region_type region_type;
     union{
@@ -217,10 +234,17 @@ typedef struct geographic_region{
     }u;
 }geographic_region;
 
+/*
+ * 8 free
+ */
+
 typedef struct psid_priority{
     psid psid;
     u8 max_priority;
 }psid_priority;
+/*
+ * 9 free
+ */
 
 typedef struct psid_priority_array{
     array_type type;
@@ -230,6 +254,9 @@ typedef struct psid_priority_array{
     }u;
 }psid_priority_array;
 
+/*
+ * 10 free
+ */
 
 typedef struct psid_array{
     array_type type;
@@ -238,11 +265,17 @@ typedef struct psid_array{
         ARRAY(u8,other_permissions);
     }u;
 }psid_array;
+/*
+ * 11 free
+ */
 
 typedef struct psid_ssp{
     psid psid;
     ARRAY(u8,service_specific_permissions);
 }psid_ssp;
+/*
+ * 12 free
+ */
 
 typedef struct psid_ssp_array{
     array_type type;
@@ -251,12 +284,18 @@ typedef struct psid_ssp_array{
         ARRAY(u8,other_permissions);
     }u;
 }psid_ssp_array;
+/*
+ * 13 free
+ */
 
 typedef struct psid_priority_ssp{
     psid psid;
     u8 max_priority;
     ARRAY(u8,service_specific_permissions);
 }psid_priority_ssp;
+/*
+ * 14 free
+ */
 
 typedef struct psid_priority_ssp_array{
     array_type type;
@@ -265,35 +304,53 @@ typedef struct psid_priority_ssp_array{
         ARRAY(u8,other_permissions);
     }u;
 }psid_priority_ssp_array;
+/*
+ * 15 free
+ */
 
 typedef struct wsa_scope{
     u8* name;
     psid_priority_ssp_array permissions;
     geographic_region region;
 }wsa_scope;
+/*
+ * 16 free
+ */
 
 typedef struct anonymous_scope{
     ARRAY(u8,additionla_data);
     psid_ssp_array permissions;
     geographic_region region;
 }anonymous_scope;
+/*
+ * 17 free
+ */
 
 typedef struct identified_scope{
     u8* name;
     psid_ssp_array permissions;
     geographic_region region;
 }identified_scope;
+/*
+ * 18 free
+ */
 
 typedef struct identified_not_localized_scope{
     u8* name;
     psid_ssp_array permissions;
 }identified_not_localized_scope;
+/*
+ * 19 free
+ */
 
 typedef struct wsa_ca_scope{
     ARRAY(u8,name);
     psid_priority_array permissions;
     geographic_region region;
 }wsa_ca_scope;
+/*
+ * 20 free
+ */
 
 typedef struct sec_data_exch_ca_scope{
     ARRAY(u8,name);
@@ -301,6 +358,9 @@ typedef struct sec_data_exch_ca_scope{
     psid_array permissions;
     geographic_region region;
 }sec_data_exch_ca_scope;
+/*
+ * 21 free
+ */
 
 typedef struct root_ca_scope{
     ARRAY(u8,name);
@@ -312,6 +372,9 @@ typedef struct root_ca_scope{
     }flags_content;
     geographic_region region;
 }root_ca_scope;
+/*
+ * 22 free
+ */
 
 typedef struct cert_specific_data{
     union{
@@ -326,6 +389,9 @@ typedef struct cert_specific_data{
         ARRAY(u8,other_scope);
     }u;
 }cert_specific_data;
+/*
+ * 23 free
+ */
 
 typedef struct tobesigned_certificate{
     holder_type holder_type;
@@ -350,6 +416,9 @@ typedef struct tobesigned_certificate{
         ARRAY(u8,other_cert_content);
     }flags_content;
 }tobesigned_certificate;
+/*
+ * 24 free
+ */
 
 typedef struct certificate{
     u8 version_and_type;
@@ -360,6 +429,9 @@ typedef struct certificate{
         ARRAY(u8,signature_material);
     }u;
 }certificate;
+/*
+ * 25 free
+ */
 
 typedef struct signer_identifier{
     signer_identifier_type type;
@@ -375,6 +447,7 @@ typedef struct signer_identifier{
     }u;
 } signer_identifier;
 
+
 typedef struct crl_request{
     hashedid8 issuer;
     crl_series crl_series;
@@ -389,6 +462,9 @@ typedef struct id_and_date{
     certid10 id;
     time32 expiry;
 }id_and_date;
+/*
+ * 26 free
+ */
 
 typedef struct tobesigned_crl{
     crl_type type;
@@ -404,6 +480,9 @@ typedef struct tobesigned_crl{
         ARRAY(u8,other_entries);
     }u;
 }tobesigned_crl;
+/*
+ * 27 free
+ */
 
 typedef struct crl{
     u8 version;
@@ -414,6 +493,9 @@ typedef struct crl{
 typedef struct tobe_encrypted_certificate_response_acknowledgment{
     u8 response_hash[10];
 }tobe_encrypted_certificate_response_acknowledgment;
+/*
+ * 28 free
+ */
 
 typedef struct tobe_encrypted_certificate_request_error{
     signer_identifier signer;
@@ -421,6 +503,9 @@ typedef struct tobe_encrypted_certificate_request_error{
     certificate_request_error_code reason;
     signature signature;
 }tobe_encrypted_certificate_request_error;
+/*
+ * 29 free
+ */
 
 typedef struct tobe_encrypted_certificate_response{
     u8 f;//这个地方在协议中是flag，可能是说一bite的意思，这个我们后面在看。
@@ -431,6 +516,9 @@ typedef struct tobe_encrypted_certificate_response{
     }u;    
     ARRAY(crl,crl_path);
 }tobe_encrypted_certificate_response;
+/*
+ * 30 free
+ */
 
 typedef struct tobesigned_certificate_request{
     u8 version_and_type;
@@ -448,12 +536,18 @@ typedef struct tobesigned_certificate_request{
     public_key verification_key;
     public_key response_encryption_key;
 }tobesigned_certificate_request;
+/*
+ * 31 free
+ */
 
 typedef struct certificate_request{
     signer_identifier signer;
     tobesigned_certificate_request unsigned_csr;
     signature signature;
 }certificate_request;
+/*
+ * 32 free
+ */
 
 typedef struct tobesigned_data{
    tbsdata_flags tf;
@@ -474,12 +568,18 @@ typedef struct tobesigned_data{
    }flags_content;
 }tobesigned_data;
 
+/*
+ * 33 free
+ */
 
 typedef struct signed_data{
     struct signer_identifier signer;
     struct tobesigned_data unsigned_data;
     struct signature signature;
 }signed_data;
+/*
+ * 34 free
+ */
 
 typedef struct tobe_encrypted{
     content_type type;
@@ -500,18 +600,27 @@ typedef struct tobe_encrypted{
         ARRAY(u8,data);
     }u;
 }tobe_encrypted;
+/*
+ * 35 free
+ */
 
 typedef struct aes_ccm_ciphertext{
     u8 nonce[12];
     ARRAY(u8,ccm_ciphertext);
 }aes_ccm_ciphertext;
 
+/*
+ * 36 free
+ */
 
 typedef struct ecies_nist_p256_encrypted_key{
     elliptic_curve_point  v;
     ARRAY(u8,c);
     u8 t[20];
 }ecies_nist_p256_encrypted_key;
+/*
+ * 37 free
+ */
 
 typedef struct recipient_info{
     hashedid8 cert_id;
@@ -521,6 +630,9 @@ typedef struct recipient_info{
     }u;
 }recipient_info;
 
+/*
+ * 38 free
+ */
 
 typedef struct encrypted_data{
     symm_algorithm symm_algorithm;
@@ -530,6 +642,9 @@ typedef struct encrypted_data{
         ARRAY(u8,other_ciphertext);
     }u;
 }encrypted_data;
+/*
+ * 39 free
+ */
 
 typedef struct tobesigned_wsa{
     ARRAY(u8,permission_indices);
@@ -543,6 +658,9 @@ typedef struct tobesigned_wsa{
         ARRAY(u8,other_data);
     }flags_content;
 }tobesigned_wsa;
+/*
+ * 40 free
+ */
 
 typedef struct signed_wsa{
     signer_identifier signer;
@@ -553,6 +671,9 @@ typedef struct signed_wsa{
 
 
 
+/*
+ * 41 free
+ */
 
 typedef struct sec_data{
 	u8 protocol_version;
