@@ -37,7 +37,7 @@ void serviceinfo_array_free(serviceinfo_array* point){
 /**
  * 申请一个pssme lsis;
  */
-pssme_lsis pssme_lsis_request(struct pssme_db* pdb);
+result pssme_lsis_request(struct pssme_db* pdb,pssme_lsis* lsis);
 /**
  * 向pssme注册或者撤销一个服务相关的东西;
  * @lsis：该实体标示。
