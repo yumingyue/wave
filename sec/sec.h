@@ -65,7 +65,7 @@ result sec_signed_data(struct cme_db* cdb,
 result sec_encrypted_data(struct cme_db* cdb,
                 content_type type,
                 string* data,
-                struct certificate_chain* certs
+                struct certificate_chain* certs,
                 bool compressed,
                 u64 time,
                 

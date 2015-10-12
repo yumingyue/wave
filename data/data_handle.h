@@ -3,8 +3,6 @@
 #include "data.h"
 //定义三种返回的状态.
 u32 NOT_ENOUGHT = -2;
-u32 SUCCESS = 0;
-u32 FAILURE = -1;
 /**
  * 将sec_data编码成字节流，放到buf里面去。
  * @sec_data : 需要编码的数据结构体。

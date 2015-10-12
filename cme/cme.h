@@ -3,7 +3,6 @@
 #include"cme_db.h"
 #include"../utils/common.h"
 #include"../data/data_handle.h"
-
 enum identifier_type{
     ID_CERTIFICATE = 0,
     ID_HASHEDID8 = 1,
@@ -25,22 +24,7 @@ struct cme_permissions{
         ARRAY(psid_priority_ssp,psid_priority_ssp_array);
     }u;
 };
-void cme_permissions_free(struct cme_permissions* permissions){
-    switch(permissions->type){
-        case PSID:
-            array_free(&permissions->u.psid_array);
-            break;
-        case PSID_PRIORITY:
-            array_free(&permissions->u.psid_priority_array);
-            break;
-        case PSID_SSP:
-            array_free(&permissions->u.psid_ssp_array);
-            break;
-        case PSID_PRIORITY_SSP:
-            array_free(&permissions->u.psid_priority_ssp);
-            break;
-    };
-}
+void cme_permissions_free(struct cme_permissions* permissions);
 
 struct cme_permissions_array{
     struct cme_permissions* cme_permissions;
@@ -48,34 +32,14 @@ struct cme_permissions_array{
 };
 
 void cme_permissions_array_free(struct cme_permissions_array* 
-                permission_array){
-    int i;
-    if(permission_array->cme_permissions == NULL)
-        return;
-    for(i=0;i<len;i++){
-        cme_permissions_free(permission_array->cme_permissions+i);
-    }
-    free(permission_array->cme_permissions);
-    permission_array->cme_permissions == NULL;
-    permission_array->len = 0;
-}
+                permission_array);
 
 struct certificate_chain{
-    certificate* certs,
+    certificate* certs;
     u32 len;
 };
 
-void certificate_chain_free(struct certificate_chain* certs_chain){
-    int i=0;
-    if(certs_chain->certs == NULL)
-        return;
-    for(i=0;i<len;i++){
-       certificate_free(certs_chain->certs + i);
-    }
-    free(certs_chain->certs);
-    certs_chain->certs = NULL;
-    certs_chain->len = 0;
-}
+void certificate_chain_free(struct certificate_chain* certs_chain);
 
 struct geographic_region_array{
     struct geographic_region* regions;
@@ -83,16 +47,7 @@ struct geographic_region_array{
 };
 
 void geographic_region_array_free(struct geographic_region_array*
-                    regions){
-    int i;
-    if(regions->regions == NULL)
-        return ;
-    for(i=0;i<len;i++)
-        geographic_region_free(regions->regions + i);
-    free(regions->regions);
-    regions->regions = NULL;
-    regions->len = 0;
-}
+                    regions);
 
 result cme_lsis_request(struct cme_db* cdb,cme_lsis* lsis);
 
@@ -198,7 +153,7 @@ result cme_reply_detection(struct cme_db* cdb,
 
 
 result cme_construct_certificate_chain(struct cme_db* cdb,
-                identifier_type type,
+                enum identifier_type type,
                 string* identifier,
                 struct certificate_chain* certificates,
                 bool terminate_at_root,
@@ -206,5 +161,5 @@ result cme_construct_certificate_chain(struct cme_db* cdb,
                 
                 struct certificate_chain* certificate_chain,
                 struct cme_permissions_array* permissions_array,
-                geographic_region_array* regions);
+                struct geographic_region_array* regions);
 #endif

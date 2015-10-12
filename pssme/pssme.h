@@ -5,7 +5,6 @@
 #include"../data/data.h"
 #include"pssme_db.h"
 #include"../cme/cme_db.h"
-#include<stdlib.h>
 #include"../sec/sec.h"
 
 typedef enum action{
@@ -34,13 +33,7 @@ typedef struct lsis_array{
 /**
  * 释放serviceinfo_array内部的指针
  */
-void serviceinfo_array_free(serviceinfo_array* point){
-    if(point->serviceinfos == NULL)
-        return;
-    free(point->serviceinfos);
-    point->serviceinfos = NULL;
-    point->len = 0;
-};
+void serviceinfo_array_free(serviceinfo_array* point);
 /**
  * 申请一个pssme lsis;
  */
