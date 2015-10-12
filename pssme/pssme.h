@@ -8,7 +8,6 @@
 #include<stdlib.h>
 #include"../sec/sec.h"
 
-
 typedef enum action{
     ADD = 1,
     DELETE = 2,
@@ -36,6 +35,8 @@ typedef struct lsis_array{
  * 释放serviceinfo_array内部的指针
  */
 void serviceinfo_array_free(serviceinfo_array* point){
+    if(point->serviceinfos == NULL)
+        return;
     free(point->serviceinfos);
     point->serviceinfos = NULL;
     point->len = 0;
@@ -82,11 +83,6 @@ result pssme_cryptimaterial_handle_delete(struct sec_db* sdb,
 result pssme_outoforder(struct pssme_db* pdb,
                 u64 generation_time,certificate* cert);
 
-//这里我是随便定义的，这个结构题不应该属于这个范畴，我准备设计到其他地方。
-struct cert_chain{
-    struct list_head list;
-    certificate cert;
-};
 
     
 /**
@@ -105,7 +101,7 @@ result pssme_cryptomaterial_handle(struct sec_db* sdb,serviceinfo_array* se_arra
 
                     string* permission_ind,
                     cmh* cmh,
-                    struct cert_chain* cert_chain);
+                    struct certificate_chain* cert_chain);
 
 void pssme_init_pdb(struct pssme_db* pdb);
 #endif

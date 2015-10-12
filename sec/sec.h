@@ -57,10 +57,7 @@ result sec_signed_data(struct cme_db* cdb,
                 u32 len_of_cert_chain);
 
 
-struct certificate_array{
-    certificate* certs;
-    u32 len;
-};
+;
 
 /*
  * 加密数据，参数参考协议
@@ -68,12 +65,12 @@ struct certificate_array{
 result sec_encrypted_data(struct cme_db* cdb,
                 content_type type,
                 string* data,
-                struct certificate_array* certs,
+                struct certificate_chain* certs
                 bool compressed,
                 u64 time,
                 
                 string* encrypted_data,
-                struct certificate_array* failed_certs);
+                struct certificate_chain* failed_certs);
 
 
 result sec_secure_data_content_extration(struct cme_db* cdb,cmh cmh,
@@ -165,5 +162,40 @@ result sec_certficate_response_processing(struct cme_db* cdb,
                 string* rec_value,
                 bool ack_request
                 );
+
+result sec_signed_wsa(struct sec_db* sdb,
+                string* data,
+                psid_priority_ssp_array* permissions,
+                time64 life_time,
+
+                string* signed_wsa);
+
+result sec_signed_wsa_verification(struct sec_db* sdb,
+                string* wsa,
+                
+                string* wsa_data,
+                psid_priority_ssp_array* permissions,
+                time64_with_standard_deviation* generation_time,
+                time64 *expiry_time,
+                three_d_location* location,
+                time64 *last_crl_time,
+                time64 *next_crl_time,
+                certificate* certificate);
+
+
+result sec_check_certificate_chain_consistency(
+                struct sec_db* sdb,
+                struct certificate_chain* cert_chain,
+                struct cme_permissions_array* permission_array,
+                geographic_region* region);
+
+result sec_check_chain_psids_consistency(struct sec_db* sdb,
+                struct cme_permissions_array* permission_array);
+
+result sec_check_chain_psid_priority_consistency(struct sec_db* sdb,
+                struct cme_permissions_array* permission_array);
+
+result sec_check_chain_geographic_consistency(struct sec_db* sdb,
+                struct geographic_region_array* regions);
 
 #endif 
