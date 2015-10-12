@@ -2,15 +2,7 @@
 #define PSSME_H
 
 #include"../sec/sec.h"
-typedef enum result{
-    SUCCESS = 0,
-    FAILURE = 1,
-    UNRECOGNIZED_LSIS = 2,
-    INVAID_INPUT = 3,
-    NOT_MATCH = 4,
-    NO_CERTIFICATE_FOUND = 6,
-}result;
-
+#include<stdlib.h>
 typedef enum action{
     ADD = 1,
     DELETE = 2,
@@ -34,7 +26,14 @@ typedef struct lsis_array{
     u32 len;
 }lsis_array;
 
-
+/**
+ * 释放serviceinfo_array内部的指针
+ */
+void serviceinfo_array_free(serviceinfo_array* point){
+    free(point->serviceinfos);
+    point->serviceinfos = NULL;
+    point->len = 0;
+};
 /**
  * 申请一个pssme lsis;
  */
@@ -54,12 +53,9 @@ result pssme_secure_provider_serviceinfo(struct pssme_db* pdb,pssme_lsis lsis,ac
  *获取该lsis实体的服务信息
  *@lsis：该实体的表示，如果为-1 表示获取所有实体的。
  *@se_array:如果成功，把相关的信息填写进去;
- *@max_len:这个se_array最多可以放多少个serviceinfo
- *return：服务信息的集合。
- *注意：这个函数不能进行内存分配，我们认为这个数组已经分配好了。我们之负责填充
  */
 result pssme_get_serviceinfo(struct pssme_db* pdb,
-                    cme_lsis lsis,serviceinfo_array* se_array,u32 max_len);
+                    cme_lsis lsis,serviceinfo_array* se_array);
 
 /**
  * 将证书和lsis绑定起来
@@ -68,6 +64,9 @@ result pssme_get_serviceinfo(struct pssme_db* pdb,
  **/
 result pssme_cryptomaterial_handle_storage(struct sec_db* sdb,
                 cmh cmh,lsis_array* lsis_array);
+
+result pssme_cryptimaterial_handle_delete(struct sec_db* sdb,
+                cmh cmh);
 
 /**
  * 检测这个证书，受到的time是否是最新。
@@ -82,6 +81,8 @@ struct cert_chain{
     struct list_head list;
     certificate cert;
 };
+
+    
 /**
  * 这个主要是寻找签名wsa的证书。
  * @sdb：整个数据库；
@@ -89,16 +90,17 @@ struct cert_chain{
  * @two_d_location:位置
  *
  * @permission_ind：我们需要填充的，当给我们的时候，我们认为内存已经分配。
- * @len:上面那个permission——ind最多可以填充多少个。
  * @cmh：学着的证书的索引
  * @cert_chain:证书链，这个调用者，我们可以认为是之分配好了这一个节点，我们需要自行填充，
  *          然后让上层来释放这个链表（这个设计，在商榷哈）
  */
 result pssme_cryptomaterial_handle(struct sec_db* sdb,serviceinfo_array* se_array,
                     two_d_location* two_dl,
-                    string* permission_ind,u32 len,
+
+                    string* permission_ind,
                     cmh* cmh,
                     struct cert_chain* cert_chain);
 
+void pssme_init_pdb(struct pssme_db* pdb);
 #endif
 
