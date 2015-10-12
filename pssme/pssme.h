@@ -1,8 +1,14 @@
 #ifndef PSSME_H
 #define PSSME_H
 
-#include"../sec/sec.h"
+#include"../utils/common.h"
+#include"../data/data.h"
+#include"pssme_db.h"
+#include"../cme/cme_db.h"
 #include<stdlib.h>
+#include"../sec/sec.h"
+
+
 typedef enum action{
     ADD = 1,
     DELETE = 2,
