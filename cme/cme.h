@@ -81,6 +81,7 @@ struct geographic_region_array{
     struct geographic_region* regions;
     u32 len;
 };
+
 void geographic_region_array_free(struct geographic_region_array*
                     regions){
     int i;
