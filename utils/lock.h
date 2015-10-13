@@ -27,4 +27,7 @@ static int inline lock_trywrlock(lock* lock){
 static int inline lock_unlock(lock* lock){
     return pthread_rwlock_unlock(lock);
 }
+static int inline lock_destroy(lock* lock){
+    return pthread_rwlock_destroy(lock);
+}
 #endif
