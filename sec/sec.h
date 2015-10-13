@@ -198,4 +198,23 @@ result sec_check_chain_psid_priority_consistency(struct sec_db* sdb,
 result sec_check_chain_geographic_consistency(struct sec_db* sdb,
                 struct geographic_region_array* regions);
 
+result sec_verify_chain_signature(struct sec_db* sdb,
+                struct certificate_chain* cert_chain,
+                bool* verified_array,u32 len,
+                string* digest,
+                signature* signature);
+
+result sec_decrypt_data(struct sec_db* sdb,
+                string* encrypted_data,
+                cmh cmh,
+                
+                content_type* type,
+                string* data);
+
+result sec_certificate_request_error_verification(struct sec_db* sdb,
+                tobe_encrypted_certificate_request_error* cert_req_error);
+
+result sec_certificate_response_verification(struct sec_db* sdb,
+                tobe_encrypted_certificate_response* cert_resp);
+
 #endif 
