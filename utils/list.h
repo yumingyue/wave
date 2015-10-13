@@ -1,6 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
-
+#include<stddef.h>
 /**
  * 这里链表的设置，是双链表，必须设定一个头链表是空的，后面很多设定都是这样假设的
  */
@@ -269,10 +269,13 @@ static inline int list_is_singular(const struct list_head *head){
  *     * @member:   the name of the list_struct within the struct.
  *
  *      */
-
 #define container_of(ptr,type,member) ({\
-                const typeof(((tyoe*)0)->member) *__mptr = (ptr);\
-                (type *)( (char*)__mptr - offsetof(type,member));})
+                                const typeof(((type*)0)->member) *__mptr = ptr;\
+                               (type*)((char*)__mptr - offsetof(type,member) );})
+
+//#define container_of(ptr,type,member) ({\
+  //              const typeof( ((type*)0)->member) *__mptr = (ptr);\
+    //            (type*)( (char*)__mptr - offsetof(type,member));})
 
 #define list_entry(ptr, type, member) \
     container_of(ptr, type, member)
@@ -303,7 +306,7 @@ static inline int list_is_singular(const struct list_head *head){
         for(pos = (head)->next; pos != (head); pos = pos->next)
 
 #define list_for_each_entry(pos,head,member) \
-        for(pos = list_entry((head)->next,typeof(*pos),member);\
-                        pos->member != (head);\
-                        pos = list_entry(pos->member->next,typeof(*pos),member))
+        for(pos = list_entry( (head)->next,typeof(*pos),member);\
+                        &(pos->member) != (head);\
+                        pos = list_entry(pos->member.next,typeof(*pos),member))
 #endif
