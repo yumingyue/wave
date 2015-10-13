@@ -14,7 +14,7 @@
 #include "data.h"
 #include <stdlib.h>
 #include <stddef.h>
-
+#define ARRAY_FREE(m) array_free((void**)(m))
 /**
  * YGH 1
  */
@@ -29,7 +29,7 @@ static void array_free(void **addr){
 static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
 	if(NULL == tbsdata_extension->value.buf)
 		return ;
-	array_free(&tbsdata_extension->value);
+	ARRAY_FREE(&tbsdata_extension->value);
 }
 
 /**
@@ -39,12 +39,12 @@ static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
  * @field外部传入参数，在释放函数中好像没用，先保留，这个数据不需要，删除就好
  */
 static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){
-	if(NULL != elliptic_curve_poin->x.buf) 
-		array_free(&elliptic_curve_point->x);
+	if(NULL != elliptic_curve_point->x.buf) 
+		ARRAY_FREE(&elliptic_curve_point->x);
 
 	if(elliptic_curve_point->type == UNCOMPRESSED)
-		if(NULL != elliptic_curve_point->y.buf)
-			array_free(&elliptic_curve_point->u.y);
+		if(NULL != elliptic_curve_point->u.y.buf)
+			ARRAY_FREE(&elliptic_curve_point->u.y);
 }
  /*
  *YGH  4
@@ -53,7 +53,7 @@ static void ecdsa_signature_free(ecdsa_signature* ecdsa_signature){
 	
 	elliptic_curve_point_free(&ecdsa_signature->r);
 	if(NULL != ecdsa_signature->s.buf)
-		array_free(&ecdsa_signature->s);
+		ARRAY_FREE(&ecdsa_signature->s);
 }
 
 
@@ -67,10 +67,10 @@ static void signature_free(signature* signature, pk_algorithm algorithm  ){
 		case ECDSA_NISTP224_WITH_SHA224:
 			break;
 		case ECDSA_NISTP256_WITH_SHA256:
-			ecdsa_signature_free(&signature->u.ecdsa_signaturei);
+			ecdsa_signature_free(&signature->u.ecdsa_signature);
 			break;
 		default:
-			array_free(&signature);
+			ARRAY_FREE(&signature);
 	}			
 }
 /*
@@ -88,8 +88,8 @@ static void public_key_free(public_key* public_key){
 			elliptic_curve_point_free(&public_key->u.ecies_nistp256.public_key);
 			break;
 		default:
-			if(NULL == public_key->u.other_key.buf)
-			array_free(&public_key->u.other_key);
+			if(NULL != public_key->u.other_key.buf)
+				ARRAY_FREE(&public_key->u.other_key);
 			break;
 	}
 }
@@ -104,13 +104,15 @@ static void geographic_region_free(geographic_region* geographic_region){
 		case CIRCLE:
 			break;
 		case RECTANGLE:
-			array_free(&rectangular_regionu->u.rectangular_region);
+			ARRAY_FREE(&geographic_region->u.rectangular_region);
+			break;
 		case POLYGON:
-			free(rectangular_region->u.polygonal_region);
+			free(geographic_region->u.polygonal_region);
+			break;
 		case NONE:
 			break;
-		case default:
-			array_free(&geographic_region->u.other_region);
+	    default:
+			ARRAY_FREE(&geographic_region->u.other_region);
 	}
 }
 
@@ -127,7 +129,15 @@ static void psid_priority_free(psid_priority*  psid_priority){
  */
 
 static void psid_priority_array_free(psid_priority_array*  psid_priority_array){
-	
+    switch(psid_priority_array->type){
+        case ARRAY_TYPE_SPECIFIED:
+			break;
+		case ARRAY_TYPE_FROM_ISSUER:
+			break;
+		default:
+			if(NULL!=psid_priority_array->u.other_permissions.buf)
+			ARRAY_FREE(&psid_priority_array->u.other_permissions);
+	}
 }
 
 
@@ -136,20 +146,43 @@ static void psid_priority_array_free(psid_priority_array*  psid_priority_array){
  */
 
 static void psid_array_free(psid_array* psid_array){
-
-		
+     switch(psid_array->type){
+		 case ARRAY_TYPE_SPECIFIED:
+           if(NULL!=psid_array->u.permissions_list.buf)
+		   ARRAY_FREE(&psid_array->u.permissions_list);
+		   break;
+		 case ARRAY_TYPE_FROM_ISSUER:
+		   break;
+		 default:
+		   if(NULL!=psid_array->u.other_permissions.buf)
+		    ARRAY_FREE(&psid_array->u.other_permissions);
+	 }
 }
 
 /**
  *YGH 11
  */
-static void psid_ssp_free(psid_ssp* psid__ssp_array){
+static void psid_ssp_free(psid_ssp* psid_ssp){
+	  free(psid_ssp->psid);
+	  if(NULL!=psid_ssp->service_specific_permissions.buf)
+		  ARRAY_FREE(&psid_ssp->service_specific_permissions);
 }
 
 /**
  *YGH 12
  */
-static void psid__ssp_array_free(psid_ssp_array* psid_ssp_array){
+static void psid_ssp_array_free(psid_ssp_array* psid_ssp_array){
+	 switch(psid_ssp_array->type){
+		 case ARRAY_TYPE_SPECIFIED:
+			if(NULL!=psid_ssp_array->u.permissions_list.buf)
+				ARRAY_FREE(&psid_ssp_array->u.permissions_list);
+			break;
+		 case ARRAY_TYPE_FROM_ISSUER:
+			break;
+		 default:
+			if(NULL!=psid_ssp_array->u.other_permissions.buf)
+				ARRAY_FREE(&psid_ssp_array->u.other_permissions);
+	 }
 }
 
 /**
@@ -157,72 +190,181 @@ static void psid__ssp_array_free(psid_ssp_array* psid_ssp_array){
  */
 
 static void psid_priority_ssp_free(psid_priority_ssp* psid_priority_ssp){
+	 free(psid_priority_ssp->psid);
+      if(NULL!=psid_priority_ssp->service_specific_permissions.buf)
+		  ARRAY_FREE(&psid_priority_ssp->service_specific_permissions);
 }
 /**
  *YGH 14
  */
-static void psid_priority_ssp_array_free(psid_priority_array* psid_priority_array){
+static void psid_priority_ssp_array_free(psid_priority_ssp_array* psid_priority_ssp_array){
+        switch(psid_priority_ssp_array->type){
+			case ARRAY_TYPE_SPECIFIED:
+				if(NULL!=psid_priority_ssp_array->u.permissions_list.buf)
+					ARRAY_FREE(&psid_priority_ssp_array->u.permissions_list);
+			 break;
+			case ARRAY_TYPE_FROM_ISSUER:
+			 break;
+			default: 
+			    if(NULL!=psid_priority_ssp_array->u.other_permissions.buf)
+					ARRAY_FREE(&psid_priority_ssp_array->u.other_permissions);
+		}				 
 	}
 /**
  *YGH 15
  */
 static void wsa_scope_free(wsa_scope* wsa_scope){
-
+	 free(wsa_scope->name);
+	 psid_priority_ssp_array_free(&wsa_scope->permissions);
+	 geographic_region_free(&wsa_scope->region);
 }
 
 /**
  *YGH 16
  */
 static void anonymous_scope_free(anonymous_scope* anonymous_scope){
+        if(NULL!=anonymous_scope->additionla_data.buf)
+         ARRAY_FREE(&anonymous_scope->additionla_data);
+		psid_ssp_array_free(&anonymous_scope->permissions);
+		geographic_region_free(&anonymous_scope->region);
+
 }
 
 /**
  *YGH 17
  */
 static void identified_scope_free(identified_scope* identified_scope){
+	free(identified_scope->name);
+	psid_ssp_array_free(&identified_scope->permissions);
+	geographic_region_free(&identified_scope->region);
+
 }
 /**
  *YGH 18
  */
 static void identified_not_localized_scope_free(identified_not_localized_scope* 
 				identified_not_localized_scope){
+	free(identified_not_localized_scope->name);
+	psid_ssp_array_free(&identified_not_localized_scope->permissions);
 }
 /**
  *YGH 19
  */
-static void wsa_ca_scope_free(wsa_ca_scope* ){
+static void wsa_ca_scope_free(wsa_ca_scope* wsa_ca_scope){
+	if(NULL!=wsa_ca_scope->name.buf)
+		ARRAY_FREE(&wsa_ca_scope->name);
+	psid_priority_array_free(&wsa_ca_scope->permissions);
+	geographic_region_free(&wsa_ca_scope->region);
 }
 /**
  *YGH 20
  */
 static void sec_data_exch_ca_scope_free(sec_data_exch_ca_scope* sec_data_exch_ca_scope){
+	if(NULL!=sec_data_exch_ca_scope->name.buf)
+		ARRAY_FREE(&sec_data_exch_ca_scope->name);
+	psid_array_free(&sec_data_exch_ca_scope->permissions);
+	geographic_region_free(&sec_data_exch_ca_scope->region);
 }
+
 
 /**
  *YGH 21
  */
 static void root_ca_scope_free(root_ca_scope* root_ca_scope){
-
+      if(NULL!=root_ca_scope->name.buf)
+		  ARRAY_FREE(&root_ca_scope->name);
+      psid_array_free(&root_ca_scope->flags_content.secure_data_permissions);
+	  psid_priority_array_free (&root_ca_scope->flags_content.wsa_permissions);
+	  if(NULL!=root_ca_scope->flags_content.other_permissons.buf)
+		  ARRAY_FREE(&root_ca_scope->flags_content.other_permissons);
+	  geographic_region_free(&root_ca_scope->region);
 }
 /**
  *YGH 22
  *@holder_typ 外部数据结构传入的参数
  */
-static void cert_specific_data_free(cert_specific_data* cert_specific_datai,holder_type holder_type){
-
+static void cert_specific_data_free(cert_specific_data* cert_specific_data,holder_type holder_type){
+           switch(holder_type){
+			case ROOT_CA:
+			   root_ca_scope_free(&cert_specific_data->u.root_ca_scope);
+			   break;
+			case SDE_CA:
+			case SDE_ENROLMENT:
+			   sec_data_exch_ca_scope_free(&cert_specific_data->u.sde_ca_scope);
+			   break;
+			case WSA_CA:
+			case WSA_ENROLMENT:
+			   wsa_ca_scope_free(&cert_specific_data->u.wsa_ca_scope);
+			   break;
+			case CRL_SIGNER:
+			   free(cert_specific_data->u.responsible_series);
+			   break;
+			case SDE_IDENTIFIED_NOT_LOCALIZED:
+			   identified_not_localized_scope_free(&cert_specific_data->u.id_non_loc_scope);
+			   break;
+			case SDE_IDENTIFIED_LOCALIZED:
+			   identified_scope_free(&cert_specific_data->u.id_scope);
+			   break;
+			case SDE_ANONYMOUS:
+			   anonymous_scope_free(&cert_specific_data->u.anonymous_scope);
+			   break;
+			case WSA:
+			   wsa_scope_free(&cert_specific_data->u.wsa_scope);
+			   break;
+			default:
+			   if(NULL!=cert_specific_data->u.other_scope.buf)
+				   ARRAY_FREE(&cert_specific_data->u.other_scope);
+		   }
 }
 /**
  *YGH 23
  *@uint8 外部数据结构传入
  */
-static void tobesigned_certificate_free(tobesigned_certificate* tobesigned_certificatei, 
-				uint8 version_and_type){
+static void tobesigned_certificate_free(tobesigned_certificate* tobesigned_certificate,u8 version_and_type){
+	switch(tobesigned_certificate->holder_type){
+    	case ROOT_CA:
+	      	break;
+		default:
+	    	break;
+	
+	}
+	cert_specific_data_free(&tobesigned_certificate->scope,tobesigned_certificate->holder_type);
+	switch(version_and_type){
+		case 2:
+	public_key_free(&tobesigned_certificate->verion_and_type.verification_key);
+		   break;
+	    case 3:
+	   	 break;
+		default:
+		if(NULL!=tobesigned_certificate->verion_and_type.other_key_material.buf)
+			ARRAY_FREE(&tobesigned_certificate->verion_and_type.other_key_material);}
+	    public_key_free(&tobesigned_certificate->flags_content.encryption_key);
+		if(NULL!=tobesigned_certificate->flags_content.other_cert_content.buf)
+			ARRAY_FREE(&tobesigned_certificate->flags_content.other_cert_content);
+
 }
 /**
  *YGH 24
  */
 static void certificate_free(certificate* certificate){
-
+   tobesigned_certificate_free(&certificate->unsigend_certificate,certificate->version_and_type);
+   switch(certificate->version_and_type){
+	   case 2:
+         switch(certificate->unsigend_certificate.holder_type){
+			 case ROOT_CA:
+				 signature_free(&certificate->u.signature,certificate->unsigend_certificate.verion_and_type.verification_key.algorithm);
+				 break;
+			  default:
+				 signature_free(&certificate->u.signature,certificate->unsigend_certificate.u.no_root_ca.signature_alg);
+		 }	;	 //  signature_free(&certificate->u.signature);
+		   break;
+		case 3:
+		 elliptic_curve_point_free(&certificate->u.reconstruction_value);
+	    	 break;
+		default:
+		 if(NULL!=certificate->u.signature_material.buf)
+			 ARRAY_FREE(&certificate->u.signature_material);
+   }
 }
 
 /**
@@ -260,6 +402,7 @@ static void tobe_encrypted_anonymous_cert_response_free(tobe_encrypted_anonymous
  *YGH 30
  */
 static void tobesigned_certificate_request_free(tobesigned_certificate_request* 
+		_
 				tobesigned_certificate_request){
 }
 /**
