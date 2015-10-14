@@ -5,6 +5,7 @@ enum color{
     RED,
     BLACK
 };
+
 struct rb_head{
     struct rb_head *father;
     struct rb_head *left;
@@ -13,7 +14,14 @@ struct rb_head{
     int (*compare)(struct rb_head*,struct rb_head*);
     int (*equal)(struct rb_head*,void* value);
 };
-
+struct rb_head nil={
+    .father = NULL,
+    .left = NULL,
+    .right = NULL,
+    .color = BLACK,
+    .compare = NULL,
+    .equal = NULL,
+};
 #ifndef container_of
 #define container_of(ptr,type,member) ({\
         const typeof(((type*)0)->member) *__mptr = ptr;\
@@ -28,9 +36,9 @@ static void inline rb_init(struct rb_head *rb,
                 int(*equal)(struct rb_head*,void* )){
     if(rb == NULL)
         return;
-    rb->father = NULL;
-    rb->left = NULL;
-    rb->right = NULL;
+    rb->father = &nil;
+    rb->left = &nil;
+    rb->right = &nil;
     rb->color = RED;
     rb->compare = com;
     rb->equal = equal;
@@ -41,11 +49,11 @@ static  struct rb_head* left_rotate(struct rb_head *root,struct rb_head *x)
 	struct rb_head *y;
 	y = x->right;
 	x->right = y->left;
-	if(y->left != NULL)
+	if(y->left != &nil)
 		y->left->father = x;
 	
 	y->father = x->father;
-	if(x->father == NULL)
+	if(x->father == &nil)
 		root = y;
 	else if(x->father->left == x)
 		x->father->left = y;
@@ -63,10 +71,10 @@ static  struct rb_head* right_rotate(struct rb_head *tree,struct rb_head *x)
 	y = x->left;
 
 	x->left = y->right;
-	if(y->right != NULL)
+	if(y->right != &nil)
 		y->right->father = x;
 	y->father = x->father ;
-	if(x->father == NULL)
+	if(x->father == &nil)
 		tree = y;
 	else if (x->father->left == x)
 		x->father->left = y;
@@ -81,15 +89,20 @@ struct rb_head* rb_find(struct rb_head *root,void *value)
 {
 	struct rb_head *node;
 	node = root;
-	int compare = node->equal(node,value);
-	while(node != NULL && compare != 0 ){
+	int compare ;
+	while(node != &nil ){
+        compare = node->equal(node,value);
 		if(compare > 0 )
 			node = node ->left;
+        else if(compare == 0)
+            break;
 		else 
 			node = node->right;
-        compare = node->equal(node,value);
 	}
-	return node ;
+    if(&nil == node)
+            return NULL;
+    printf("%ld nil==%ld \n",node,&nil);
+	return node;
 }
 
 struct rb_head* rb_insert_fixup(struct rb_head *tree,struct rb_head *x)
@@ -143,11 +156,15 @@ struct rb_head* rb_insert_fixup(struct rb_head *tree,struct rb_head *x)
 
 
 struct rb_head* rb_insert(struct rb_head *tree,struct rb_head *x)
-{
+{   
+    if(tree == NULL){
+        x->color = BLACK;
+        return x;
+    }
 	struct rb_head *node,*pre;
 	node = tree;
-	pre = NULL;	
-	while(node != NULL){
+	pre = &nil;	
+	while(node != &nil){
 		pre =  node;
         if(tree->compare(x,node) <0)
 			node = node ->left;
@@ -156,12 +173,13 @@ struct rb_head* rb_insert(struct rb_head *tree,struct rb_head *x)
 		}
 
 	x->father = pre;
-	if(pre == NULL)
+	if(pre == &nil)
 		tree = x;
     else if(tree->compare(x,pre) < 0)
 		pre->left =  x;
 	else 
 		pre->right = x;
+    printf("rb_insert\n");
 	return rb_insert_fixup(tree,x);
 	
 //	printf("x->father->value:%d\n",x->father->value);
@@ -171,8 +189,8 @@ struct rb_head* rb_insert(struct rb_head *tree,struct rb_head *x)
 struct rb_head* tree_min(struct rb_head *tree,struct rb_head *node)
 {
 	struct rb_head *pre;
-	pre = NULL;
-	while(node != NULL){
+	pre = &nil;
+	while(node != &nil){
 		pre = node;
 		node = node ->left;
 	}
@@ -245,13 +263,13 @@ struct rb_head* rb_delete(struct rb_head *tree,struct rb_head *x)
 	enum color color;
 	struct rb_head *repx,*fix;
 	
-	if(x->left == NULL){
+	if(x->left == &nil){
 		repx = x->right;
 		color = x->color;
 		fix = repx;
 		
 		repx->father = x->father;
-		if(x->father == NULL)
+		if(x->father == &nil)
 			tree = repx;
 		else if(x->father->left == x)
 			x->father->left = repx;
@@ -259,13 +277,13 @@ struct rb_head* rb_delete(struct rb_head *tree,struct rb_head *x)
 			x->father->right = repx;
 		
 	}
-	else if(x->right == NULL){
+	else if(x->right == &nil){
 		repx = x->left;
 		color = x->color;
 		fix  = repx;
 
 		repx->father = x->father;
-		if(x->father == NULL)
+		if(x->father == &nil)
 			tree = repx;
 		else if(x->father->left == x)
 			x->father->left = repx;
@@ -286,7 +304,7 @@ struct rb_head* rb_delete(struct rb_head *tree,struct rb_head *x)
 		
 
 		repx->father =x->father;
-		if(x->father == NULL)
+		if(x->father == &nil)
 			tree = repx;
 		else if(x->father->left == x)
 			x->father->left = repx;
