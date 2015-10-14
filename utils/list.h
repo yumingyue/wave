@@ -272,8 +272,8 @@ static inline int list_is_singular(const struct list_head *head){
 
 #ifndef container_of
 #define container_of(ptr,type,member) ({\
-                                const typeof(((type*)0)->member) *__mptr = ptr;\
-                               (type*)((char*)__mptr - offsetof(type,member) );})
+        const typeof(((type*)0)->member) *__mptr = ptr;\
+        (type*)((char*)__mptr - offsetof(type,member) );})
 #endif
 
 #define list_entry(ptr, type, member) \
