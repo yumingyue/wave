@@ -408,7 +408,7 @@ typedef struct tobesigned_certificate{
     union{
         public_key verification_key;
         ARRAY(u8,other_key_material);
-    }verion_and_type;
+    }version_and_type;
     struct{
         certificate_duration lifetime;
         time32 start_validity;
@@ -422,7 +422,7 @@ typedef struct tobesigned_certificate{
 
 typedef struct certificate{
     u8 version_and_type;
-    tobesigned_certificate unsigend_certificate;
+    tobesigned_certificate unsigned_certificate;
     union{
         signature signature;
         elliptic_curve_point reconstruction_value;
