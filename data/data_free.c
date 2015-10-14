@@ -14,6 +14,7 @@
 #include "data.h"
 #include <stdlib.h>
 #include <stddef.h>
+
 #define ARRAY_FREE(m) array_free((void**)(m))
 /**
  * YGH 1
@@ -41,8 +42,6 @@ static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
 static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){
 	if(NULL != elliptic_curve_point->x.buf) 
 		ARRAY_FREE(&elliptic_curve_point->x);
-
-
 	if(elliptic_curve_point->type == UNCOMPRESSED)
 		if(NULL != elliptic_curve_point->u.y.buf)
 			ARRAY_FREE(&elliptic_curve_point->u.y);
@@ -256,6 +255,7 @@ static void wsa_ca_scope_free(wsa_ca_scope* wsa_ca_scope){
 	psid_priority_array_free(&wsa_ca_scope->permissions);
 	geographic_region_free(&wsa_ca_scope->region);
 }
+
 /**
  *YGH 20
  */
@@ -341,7 +341,6 @@ static void tobesigned_certificate_free(tobesigned_certificate* tobesigned_certi
 	    public_key_free(&tobesigned_certificate->flags_content.encryption_key);
 		if(NULL!=tobesigned_certificate->flags_content.other_cert_content.buf)
 			ARRAY_FREE(&tobesigned_certificate->flags_content.other_cert_content);
-
 }
 /**
  *YGH 24
@@ -422,7 +421,6 @@ static void tobesigned_crl_free(tobesigned_crl* tobesigned_crl){
  *YGH 27
  */
 static void crl_free(crl* crl){
-	
 	int n = crl->signer.u.certificates.len - 1;
 	tobesigned_crl_free(&crl->unsigned_crl);
 	
@@ -773,7 +771,7 @@ void sec_data_free(sec_data* sec_data){
             crl_request_free(&sec_data->u.crl_request);
             break;
         case CRL:
-            crl_free(&sec_data->u.crl);
+            ARRAY_FREE(&sec_data->u.crl);
             break;
         default:
 			ARRAY_FREE(&sec_data->u.other_data);

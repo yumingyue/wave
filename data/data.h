@@ -43,7 +43,7 @@ typedef enum certificate_request_error_code{
     FUTURE_CA_CERT = 7,
     CA_CERT_EXPIERD = 8,
     CA_CEAT_REVOKED = 9,
-}certificate_request_error_code;
+}ertificate_request_error_code;
 
 typedef enum region_type{
     FROM_ISSUER = 0,
@@ -89,6 +89,7 @@ typedef enum holder_type{
     SDE_CA = 6,
     WSA_CA = 7,
     CRL_SIGNER = 8,
+	ROOT_CA = 255,
 }holder_type;
 
 typedef enum holder_type_flags{
@@ -131,27 +132,33 @@ typedef enum tbsdata_flags{
     USE_LOCATION = 1<<2,
     EXTENSIONS = 1<<3
 }tbsdata_flags;
-
+/**
+ * buf_to  1
+ */
 typedef struct time64_with_standard_deviation{
     time64 time;
     u8 long_std_dev;
 }time64_with_standard_deviation;
 
 /*
- * 2 free
+ * 2 free  buf_to  2
  */
 
 typedef struct tbsdata_extension{
     tbsdata_extension_type type;
-    ARRAY(u8,value);
+    ARRAY(u8,value);//这个的编码应该是先用一字节表明长度，然后编码？
 }tbsdata_extension;
-
+/**
+ *  	   buf_to  3
+ */
 typedef struct three_d_location{
     s32 latitude;
     s32 longitude;
     u8 elevation[2];
 }three_d_location;
-
+/**
+ *	buf_to 4
+ */
 typedef struct hashedid8{
     u8 hashedid8[8];
 }hashedid8;
@@ -162,9 +169,8 @@ typedef enum pk_algorithm{
     ECIES_NISTP256 =2,
 }pk_algorithm;
 /*
- * 3 free
+ * 3 free   buf_to 5
  */
-
 typedef struct elliptic_curve_point{
     ecc_public_keytype type;
     ARRAY(u8,x);
@@ -173,7 +179,7 @@ typedef struct elliptic_curve_point{
     }u;
 }elliptic_curve_point;
 /*
- * 4 free
+ * 4 free  buf_to 6
  */
 typedef struct ecdsa_signature{
     elliptic_curve_point r;
@@ -676,17 +682,17 @@ typedef struct signed_wsa{
  */
 
 typedef struct sec_data{
-	u8 protocol_version;
-	content_type type;
+	u8 protocol_version;//1
+	content_type type;  //4
 	union
 	{
-		ARRAY(u8,data);
-		struct signed_data signed_data;//（content_type)
+		ARRAY(u8,data); //8
+		struct signed_data signed_data;//288
 		struct signed_wsa signed_wsa;
 		struct encrypted_data encrypted_data;
 		struct crl_request crl_request;
 		struct crl crl;
         ARRAY(u8,other_data);
-	}u;
-}sec_data;
+	}u;//292
+}sec_data;//300
 #endif

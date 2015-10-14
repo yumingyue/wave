@@ -23,14 +23,14 @@
 #define getchar7(n) *((char*)&n + 6)
 #define getchar8(n) *((char*)&n + 7)
 
-static inline tobuf32(u8* buf,u32 value){	//将 
-    value = host_to_be32(value);
-    *buf++ = getchar1(value);
+static inline tobuf32(u8* buf,u32 value){	//将u32类型的value采用大端编码编码到buf中
+    value = host_to_be32(value);			//host_to_be32  将主机编码改为大端编码
+    *buf++ = getchar1(value);				//fixlength vector 
     *buf++ = getchar2(value);
     *buf++ = getchar3(value);
     *buf++ = getchar4(value);
 }
-static inline tobuf16(u8* buf,u16 value){
+static inline tobuf16(u8* buf,u16 value){//fixlength vector
     value = host_to_be16(value);
     *buf++ = getchar1(value);
     *buf++ = getchar2(value);
@@ -46,15 +46,15 @@ static inline tobuf64(u8* buf,u64 value){
     *buf++ = getchar7(value);
     *buf++ = getchar8(value);
 }
-static void varible_len1_encoding(u8* buf,u8 len){
+static void varible_len1_encoding(u8* buf,u8 len){	//变量长度可变编码, Variable length 长度小于2的7次方
     *buf = len;
 }
-static void varible_len2_encoding(u8* buf,u16 len){
+static void varible_len2_encoding(u8* buf,u16 len){  //变量长度可变编码，Variable  length 小于2的14
     u16 size = 0x8000;
     size = size | len;
     tobuf16(buf,size);
 }
-static void varible_len3_encoding(u8* buf,u32 len){
+static void varible_len3_encoding(u8* buf,u32 len){ //Variable length 小于2的21次方
     u32 size = 0x00c00000;
     size = size | len;
     size = host_to_be32(size);
@@ -62,12 +62,12 @@ static void varible_len3_encoding(u8* buf,u32 len){
     *buf++ = getchar3(size);
     *buf++ = getchar4(size);
 }
-static void varible_len4_encoding(u8* buf,u32 len){
+static void varible_len4_encoding(u8* buf,u32 len){//同上 小于28次方
     u32 size = 0xe0000000;
     size = size | len;
     tobuf32(buf,size);
 }
-static void varible_len5_encoding(u8* buf,u64 len){
+static void varible_len5_encoding(u8* buf,u64 len){//同上 小于35次方
     u64 size = 0x000000f000000000;
     size = size | len;
     size = host_to_be64(size);
@@ -77,7 +77,7 @@ static void varible_len5_encoding(u8* buf,u64 len){
     *buf++ = getchar7(size);
     *buf++ = getchar8(size);
 }
-static void varible_len6_encoding(u8* buf,u64 len){
+static void varible_len6_encoding(u8* buf,u64 len){//同上 小于42次方
     u64 size = 0x0000f80000000000;
     size = size | len;
     size = host_to_be64(size);
@@ -88,7 +88,7 @@ static void varible_len6_encoding(u8* buf,u64 len){
     *buf++ = getchar7(size);
     *buf++ = getchar8(size);
 }
-static void varible_len7_encoding(u8* buf,u64 len){
+static void varible_len7_encoding(u8* buf,u64 len){//同上，小于49次方
     u64 size = 0x00fc000000000000;
     size = size | len;
     size = host_to_be64(size);
@@ -100,12 +100,12 @@ static void varible_len7_encoding(u8* buf,u64 len){
     *buf++ = getchar7(size);
     *buf++ = getchar8(size);
 }
-static void varible_len8_encoding(u8* buf,u64 len){
+static void varible_len8_encoding(u8* buf,u64 len){//同上 小于56次方
     u64 size = 0xfe00000000000000;
     size = size | len;
     tobuf64(buf,size);
 }
-static void  varible_len_encoding(u8* buf,u64 len){
+static void  varible_len_encoding(u8* buf,u64 len){//对Variable length的length进行编码 
     if(len < 2<<7){
         varible_len1_encoding(u8* buf,(u8)len);
         return ;
@@ -138,7 +138,7 @@ static void  varible_len_encoding(u8* buf,u64 len){
     return ;
         
 }
-static u32 varible_len_calculate(u8* buf,u64 len){
+static u32 varible_len_calculate(u8* buf,u64 len){ //  
     if(len < 2<<7){
         return 1;
     }
