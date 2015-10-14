@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+
+#define	 ARRAY_FREE(m)	array_free((void**)(m))
+
+
 /**
  * YGH 1
  */
@@ -29,7 +33,7 @@ static void array_free(void **addr){
 static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
 	if(NULL == tbsdata_extension->value.buf)
 		return ;
-	array_free(&tbsdata_extension->value);
+	ARRAY_FREE((&tbsdata_extension->value));
 }
 
 /**
@@ -39,12 +43,12 @@ static void tbsdata_extension_free(tbsdata_extension* tbsdata_extension)	{
  * @field外部传入参数，在释放函数中好像没用，先保留，这个数据不需要，删除就好
  */
 static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point){
-	if(NULL != elliptic_curve_poin->x.buf) 
-		array_free(&elliptic_curve_point->x);
+	if(NULL != elliptic_curve_point->x.buf) 
+		ARRAY_FREE(&elliptic_curve_point->x);
 
 	if(elliptic_curve_point->type == UNCOMPRESSED)
-		if(NULL != elliptic_curve_point->y.buf)
-			array_free(&elliptic_curve_point->u.y);
+		if(NULL != elliptic_curve_point->u.y.buf)
+		ARRAY_FREE(&elliptic_curve_point->u.y);
 }
  /*
  *YGH  4
@@ -53,7 +57,7 @@ static void ecdsa_signature_free(ecdsa_signature* ecdsa_signature){
 	
 	elliptic_curve_point_free(&ecdsa_signature->r);
 	if(NULL != ecdsa_signature->s.buf)
-		array_free(&ecdsa_signature->s);
+			ARRAY_FREE(&ecdsa_signature->s);
 }
 
 
@@ -67,10 +71,10 @@ static void signature_free(signature* signature, pk_algorithm algorithm  ){
 		case ECDSA_NISTP224_WITH_SHA224:
 			break;
 		case ECDSA_NISTP256_WITH_SHA256:
-			ecdsa_signature_free(&signature->u.ecdsa_signaturei);
+			ecdsa_signature_free(&signature->u.ecdsa_signature);
 			break;
 		default:
-			array_free(&signature);
+			ARRAY_FREE(&signature);
 	}			
 }
 /*
@@ -88,8 +92,8 @@ static void public_key_free(public_key* public_key){
 			elliptic_curve_point_free(&public_key->u.ecies_nistp256.public_key);
 			break;
 		default:
-			if(NULL == public_key->u.other_key.buf)
-			array_free(&public_key->u.other_key);
+			if(NULL != public_key->u.other_key.buf)
+			ARRAY_FREE(&public_key->u.other_key);
 			break;
 	}
 }
@@ -104,13 +108,13 @@ static void geographic_region_free(geographic_region* geographic_region){
 		case CIRCLE:
 			break;
 		case RECTANGLE:
-			array_free(&rectangular_regionu->u.rectangular_region);
+			ARRAY_FREE(&geographic_region->u.rectangular_region);
 		case POLYGON:
-			free(rectangular_region->u.polygonal_region);
+			free(geographic_region->u.polygonal_region);
 		case NONE:
 			break;
-		case default:
-			array_free(&geographic_region->u.other_region);
+		default:
+			ARRAY_FREE(&geographic_region->u.other_region);
 	}
 }
 
@@ -190,8 +194,9 @@ static void identified_not_localized_scope_free(identified_not_localized_scope*
 /**
  *YGH 19
  */
-static void wsa_ca_scope_free(wsa_ca_scope* ){
+static void wsa_ca_scope_free(wsa_ca_scope* wsa_ca_scope){
 }
+
 /**
  *YGH 20
  */
@@ -216,7 +221,7 @@ static void cert_specific_data_free(cert_specific_data* cert_specific_datai,hold
  *@uint8 外部数据结构传入
  */
 static void tobesigned_certificate_free(tobesigned_certificate* tobesigned_certificatei, 
-				uint8 version_and_type){
+				u8 version_and_type){
 }
 /**
  *YGH 24
@@ -239,7 +244,7 @@ static void tobesigned_crl_free(tobesigned_crl* tobesigned_crl){
 /**
  *YGH 27
  */
-static void clr_free(clr* clr){
+static void crl_free(crl* crl){
 }
 
 /**
@@ -254,7 +259,7 @@ static void tobe_encrypted_certificate_request_error_free(tobe_encrypted_certifi
  *@version_and_type外部数据结构传入参数
  */
 static void tobe_encrypted_anonymous_cert_response_free(tobe_encrypted_anonymous_cert_response* 
-				tobe_encrypted_anonymous_cert_response, uint8 version_and_type){
+				tobe_encrypted_anonymous_cert_response, u8 version_and_type){
 }
 /**
  *YGH 30
@@ -293,7 +298,7 @@ static void aes_ccm_ciphertext_free(aes_ccm_ciphertext* aes_ccm_ciphertext){
 /**
  *YGH 36
  */
-static void ecies_nist_p256_encrypted_key_free(ecies_nist_p256_encrypted_key_free* 
+static void ecies_nist_p256_encrypted_key_free(ecies_nist_p256_encrypted_key* 
 				ecies_nist_p256_encrypted_key){
 }
 /**
@@ -329,12 +334,12 @@ void sec_data_free(sec_data* sec_data){
         return ;
     switch(sec_data->type){
         case UNSECURED:
-            array_free(sec_data->u.data);
+           ARRAY_FREE(&sec_data->u.data);
             break;
         case SIGNED:
         case SIGNED_EXTERNAL_PAYLOAD:
         case SIGNED_PARTIAL_PAYLOAD:
-            array_free(&sec_data->u.signed_data);
+            ARRAY_FREE(&sec_data->u.signed_data);
             break;
         case SIGNED_WSA:
             signed_wsa_free(&sec_data->u.signed_wsa);
@@ -346,10 +351,10 @@ void sec_data_free(sec_data* sec_data){
             crl_request_free(&sec_data->u.crl_request);
             break;
         case CRL:
-            crl_free(&sec_data->u.crl);
+            ARRAY_FREE(&sec_data->u.crl);
             break;
         default:
-			array_free(sec_data->u.other_data);
+			ARRAY_FREE(&sec_data->u.other_data);
             break;
 
     }
