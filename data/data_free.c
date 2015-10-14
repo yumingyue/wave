@@ -14,7 +14,7 @@
 #include "data.h"
 #include <stdlib.h>
 #include <stddef.h>
-
+#define ARRAY_FREE(m)	array_free((void**)(m))
 /**
  * YGH 1
  */
@@ -43,7 +43,7 @@ static void elliptic_curve_point_free(elliptic_curve_point* elliptic_curve_point
 		array_free(&elliptic_curve_point->x);
 
 	if(elliptic_curve_point->type == UNCOMPRESSED)
-		if(NULL != elliptic_curve_point->y.buf)
+		if(NULL != elliptic_curve_point->u.y.buf)
 			array_free(&elliptic_curve_point->u.y);
 }
  /*
@@ -67,7 +67,7 @@ static void signature_free(signature* signature, pk_algorithm algorithm  ){
 		case ECDSA_NISTP224_WITH_SHA224:
 			break;
 		case ECDSA_NISTP256_WITH_SHA256:
-			ecdsa_signature_free(&signature->u.ecdsa_signaturei);
+			ecdsa_signature_free(&signature->u.ecdsa_signature);
 			break;
 		default:
 			array_free(&signature);
@@ -104,9 +104,9 @@ static void geographic_region_free(geographic_region* geographic_region){
 		case CIRCLE:
 			break;
 		case RECTANGLE:
-			array_free(&rectangular_regionu->u.rectangular_region);
+			array_free(&geographic_region->u.rectangular_region);
 		case POLYGON:
-			free(rectangular_region->u.polygonal_region);
+			free(geographic_region->u.polygonal_region);
 		case NONE:
 			break;
 		case default:
@@ -229,17 +229,90 @@ static void certificate_free(certificate* certificate){
  *YGH 25
  */
 static void signer_identifier_free(signer_identifier* signer_identifier){
-
+	int i;
+	switch(signer_identifier->type){
+		case SELF:
+			break;
+		case CERTIFICATE_DIGEST_WITH_ECDSAP224:
+			break;
+		case CERTIFICATE_DIGEST_WITH_ECDSAP256:
+			break;
+		case CERTIFICATE:
+			certificate_free(&signer_identifier->u.certificate);
+			break;
+		case CERTIFICATE_CHAIN:
+			if(NULL != signer_identifier->u.certificates.buf){
+				for(i = 0;i<signer_identifier->u.certificates.len;i++){
+					certificate_free(signer_identifier->u.certificates.buf + i);
+				}
+				ARRAY_FREE(&signer_identifier->u.certificates);
+			}
+			break;
+		case CERTIFICATE_DIGETS_WITH_OTHER_ALGORITHM:
+			break;
+		default:
+			if(NULL != signer_identifier->u.id.buf)
+				ARRAY_FREE(&signer_identifier->u.id);
+	}
 }
+
  /**
  *YGH 26
  */
 static void tobesigned_crl_free(tobesigned_crl* tobesigned_crl){
+	switch(tobesigned_crl->type){
+		case ID_ONLY:
+			if(NULL != tobesigned_crl->u.entries.buf)
+				ARRAY_FREE(&tobesigned_crl->u.entries);
+			break;
+		case ID_AND_EXPIRY:
+			if(NULL != tobesigned_crl->u.expiring_entries.buf)
+				ARRAY_FREE(&tobesigned_crl->u.expiring_entries);
+			break;
+		default:
+			if(NULL != tobesigned_crl->u.other_entries.buf)
+				ARRAY_FREE(&tobesigned_crl->u.other_entries);
+			break;
+	}
 }
+
 /**
  *YGH 27
  */
-static void clr_free(clr* clr){
+static void crl_free(crl* crl){
+	
+	int n = crl->signer.u.certificates.len - 1;
+	tobesigned_crl_free(&crl->unsigned_crl);
+	
+	switch(crl->signer.type){
+		case CERTIFICATE_DIGEST_WITH_ECDSAP224:
+			signature_free(&crl->signature,ECDSA_NISTP224_WITH_SHA224);
+			break;
+		case CERTIFICATE_DIGEST_WITH_ECDSAP256:
+			signature_free(&crl->signature,ECDSA_NISTP256_WITH_SHA256);
+			break;
+		case CERTIFICATE_DIGETS_WITH_OTHER_ALGORITHM:
+			signature_free(&crl->signature,crl->signer.u.other_algorithm.algorithm);
+			break;
+		case CERTIFICATE:
+			if(crl->signer.u.certificate.version_and_type == 2)
+				signature_free(&crl->signature,
+						crl->signer.u.certificate.unsigned_certificate.version_and_type.verification_key.algorithm);
+			else if(crl->signer.u.certificate.version_and_type == 3)
+				signature_free(&crl->signature,
+						crl->signer.u.certificate.unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+		case CERTIFICATE_CHAIN:
+			if((crl->signer.u.certificates.buf + n)->version_and_type == 2)
+				signature_free(&crl->signature,
+					(crl->signer.u.certificates.buf + n)->unsigned_certificate.version_and_type.verification_key.algorithm);
+			else if((crl->signer.u.certificates.buf + n)->version_and_type == 3)
+				signature_free(&crl->signature,
+					(crl->signer.u.certificates.buf + n)->unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+	}
+	signer_identifier_free(&crl->signer);
+
 }
 
 /**
@@ -248,78 +321,289 @@ static void clr_free(clr* clr){
 static void tobe_encrypted_certificate_request_error_free(tobe_encrypted_certificate_request_error*
 				tobe_encrypted_certificate_request_error){
 
+	switch(tobe_encrypted_certificate_request_error->signer.u.certificate.version_and_type){
+		case 2:
+			signature_free(&tobe_encrypted_certificate_request_error->signature,
+					tobe_encrypted_certificate_request_error->signer.u.certificate.unsigned_certificate.version_and_type.verification_key.algorithm);
+			break;
+		case 3:
+			signature_free(&tobe_encrypted_certificate_request_error->signature,
+					tobe_encrypted_certificate_request_error->signer.u.certificate.unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+		default:
+			break;
+	}
+	signer_identifier_free(&tobe_encrypted_certificate_request_error->signer);
 }
+
 /**
  *YGH 29
  *@version_and_type外部数据结构传入参数
  */
-static void tobe_encrypted_anonymous_cert_response_free(tobe_encrypted_anonymous_cert_response* 
-				tobe_encrypted_anonymous_cert_response, uint8 version_and_type){
+static void tobe_encrypted_certificate_response_free(tobe_encrypted_certificate_response* 
+				tobe_encrypted_certificate_response, u8 version_and_type){
+	int i;
+	if(NULL != tobe_encrypted_certificate_response->certificate_chain.buf){
+		for(i = 0;i<tobe_encrypted_certificate_response->certificate_chain.len;i++){
+			certificate_free(tobe_encrypted_certificate_response->certificate_chain.buf + i);
+		}
+		ARRAY_FREE(&tobe_encrypted_certificate_response->certificate_chain);
+	}
+	switch(version_and_type){
+		case 2:
+			break;
+		case 3:
+			if(NULL != tobe_encrypted_certificate_response->u.recon_priv.buf)
+				ARRAY_FREE(&tobe_encrypted_certificate_response->u.recon_priv);
+			break;
+		default:
+			if(NULL != tobe_encrypted_certificate_response->u.other_material.buf)
+				ARRAY_FREE(&tobe_encrypted_certificate_response->u.other_material);
+			break;
+	}
+	if(NULL != tobe_encrypted_certificate_response->crl_path.buf){
+		for(i = 0;i<tobe_encrypted_certificate_response->crl_path.len;i++){
+			crl_free(tobe_encrypted_certificate_response->crl_path.buf + i);
+		}
+		ARRAY_FREE(&tobe_encrypted_certificate_response->crl_path);
+	}
 }
+
 /**
  *YGH 30
  */
 static void tobesigned_certificate_request_free(tobesigned_certificate_request* 
 				tobesigned_certificate_request){
+
+	cert_specific_data_free(&tobesigned_certificate_request->type_specific_data,
+			tobesigned_certificate_request->holder_type);
+	public_key_free(&tobesigned_certificate_request->flags_content.encryption_key);
+
+	if(NULL != tobesigned_certificate_request->flags_content.other_cert.buf)
+		ARRAY_FREE(&tobesigned_certificate_request->flags_content.other_cert);
+
+	public_key_free(&tobesigned_certificate_request->verification_key);
+	public_key_free(&tobesigned_certificate_request->response_encryption_key);
 }
+
 /**
  *YGH 31
  */
 static void certificate_request_free(certificate_request* certificate_request){
+	switch(certificate_request->signer.type){
+		case SELF:
+			signature_free(&certificate_request->signature,
+					certificate_request->unsigned_csr.verification_key.algorithm);
+			break;
+		case CERTIFICATE:
+			if(certificate_request->signer.u.certificate.version_and_type == 2)
+				signature_free(&certificate_request->signature,
+						certificate_request->signer.u.certificate.unsigned_certificate.version_and_type.verification_key.algorithm);
+			else if(certificate_request->signer.u.certificate.version_and_type == 3)
+				signature_free(&certificate_request->signature,
+						certificate_request->signer.u.certificate.unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+		default:
+			break;
+	}
 
+	signer_identifier_free(&certificate_request->signer);
+	tobesigned_certificate_request_free(&certificate_request->unsigned_csr);
 }
 
 /**
  *YGH 32??????/////////////现不写，保留下
  */
 static void tobesigned_data_free(tobesigned_data* tobesigned_data, content_type type){
+	int i;
+	switch(type){
+		case SIGNED:
+		case SIGNED_PARTIAL_PAYLOAD:
+			free(tobesigned_data->u.type_signed.psid);
+			if(NULL != tobesigned_data->u.type_signed.data.buf)
+				ARRAY_FREE(&tobesigned_data->u.type_signed.data);
+			break;
+		case SIGNED_EXTERNAL_PAYLOAD:
+			free(tobesigned_data->u.psid);
+			break;
+		default:
+			if(NULL != tobesigned_data->u.data.buf)
+				ARRAY_FREE(&tobesigned_data->u.data);
+			break;
+	}
+	if(NULL != tobesigned_data->flags_content.extensions.buf){
+		for(i = 0;i<tobesigned_data->flags_content.extensions.len;i++){
+			tbsdata_extension_free(tobesigned_data->flags_content.extensions.buf + i);
+		}
+		ARRAY_FREE(&tobesigned_data->flags_content.extensions);
+	}
+	if(NULL != tobesigned_data->flags_content.other_data.buf)
+		ARRAY_FREE(&tobesigned_data->flags_content.other_data);
 }
+
 /**
  *YGH 33
  */
 static void signed_data_free(signed_data* signed_data, content_type type){
+
+	int n = signed_data->signer.u.certificates.len - 1;
+
+	switch(signed_data->signer.type){
+		case CERTIFICATE_DIGEST_WITH_ECDSAP224:
+			signature_free(&signed_data->signature,ECDSA_NISTP224_WITH_SHA224);
+			break;
+		case CERTIFICATE_DIGEST_WITH_ECDSAP256:
+			signature_free(&signed_data->signature,ECDSA_NISTP256_WITH_SHA256);
+			break;
+		case CERTIFICATE_DIGETS_WITH_OTHER_ALGORITHM:
+			signature_free(&signed_data->signature,signed_data->signer.u.other_algorithm.algorithm);
+			break;
+		case CERTIFICATE:
+			if(signed_data->signer.u.certificate.version_and_type == 2)
+				signature_free(&signed_data->signature,
+						signed_data->signer.u.certificate.unsigned_certificate.version_and_type.verification_key.algorithm);
+			else if(signed_data->signer.u.certificate.version_and_type == 3)
+				signature_free(&signed_data->signature,
+						signed_data->signer.u.certificate.unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+		case CERTIFICATE_CHAIN:
+			if((signed_data->signer.u.certificates.buf + n)->version_and_type == 2)
+				signature_free(&signed_data->signature,
+						(signed_data->signer.u.certificates.buf + n)->unsigned_certificate.version_and_type.verification_key.algorithm);
+			else if((signed_data->signer.u.certificates.buf + n)->version_and_type == 3)
+				signature_free(&signed_data->signature,
+						(signed_data->signer.u.certificates.buf + n)->unsigned_certificate.u.no_root_ca.signature_alg);
+			break;
+	}
+	signer_identifier_free(&signed_data->signer);
+	tobesigned_data_free(&signed_data->unsigned_data,type);
 }
+
 /**
  *YGH 34
  */
 static void tobe_encrypted_free(tobe_encrypted* tobe_encrypted){
+	switch(tobe_encrypted->type){
+		case UNSECURED:
+			if(NULL != tobe_encrypted->u.plain_text.buf)
+				ARRAY_FREE(&tobe_encrypted->u.plain_text);
+			break;
+		case SIGNED:
+		case SIGNED_EXTERNAL_PAYLOAD:
+		case SIGNED_PARTIAL_PAYLOAD:
+			signed_data_free(&tobe_encrypted->u.signed_data,tobe_encrypted->type);
+			break;
+		case CERTIFICATE_REQUEST:
+			certificate_request_free(&tobe_encrypted->u.request);
+			break;
+		case CERTIFICATE_RESPONSE:
+			tobe_encrypted_anonymous_cert_response_free(&tobe_encrypted->u.response);
+		case ANOYMOUS_CERTIFICATE_RESPONSE:
+			break;
+		case CERTIFICATE_REQUSET_ERROR:
+			tobe_encrypted_certificate_request_error_free(&tobe_encrypted->u.request_error);
+			break;
+		case CRL_REQUEST:
+			crl_request_free(&tobe_encrypted->u.crl_request);
+			break;
+		case CRL:
+			crl_free(&tobe_encrypted->u.crl);
+			break;
+		case CERTIFACATE_RESPONSE_ACKNOWLEDGMENT:
+			break;
+		default:
+			if(NULL != tobe_encrypted->u.data.buf)
+				ARRAY_FREE(&tobe_encrypted->u.data);
+	}
 }
+
 /**
  *YGH 35
  */
 static void aes_ccm_ciphertext_free(aes_ccm_ciphertext* aes_ccm_ciphertext){
-	
+	if(NULL != aes_ccm_ciphertext->ccm_ciphertext.buf)
+		ARRAY_FREE(&aes_ccm_ciphertext->ccm_ciphertext);
 }
+
 /**
  *YGH 36
  */
-static void ecies_nist_p256_encrypted_key_free(ecies_nist_p256_encrypted_key_free* 
-				ecies_nist_p256_encrypted_key){
+static void ecies_nist_p256_encrypted_key_free(ecies_nist_p256_encrypted_key* 
+					ecies_nist_p256_encrypted_key){
+
+	elliptic_curve_point_free(&ecies_nist_p256_encrypted_key->v);
+
+	if(NULL != ecies_nist_p256_encrypted_key->c.buf)
+		ARRAY_FREE(&ecies_nist_p256_encrypted_key->c);
 }
+
 /**
  *YGH 37
  */
 static void recipient_info_free(recipient_info* recipient_info, pk_algorithm algorithm){
-
+	switch(algorithm){
+		case ECIES_NISTP256:
+			ecies_nist_p256_encrypted_key_free(&recipient_info->u.enc_key);
+			break;
+		default:
+			if(NULL != recipient_info->u.other_enc_key.buf)
+				ARRAY_FREE(&recipient_info->u.other_enc_key);
+			break;
+	}
 }
 
 /**
  *YGH 38
+ *@recipient_info_free 本协议仅支持ECIES_NISTP256,其他算法暂不考虑
  */
 static void  encrypted_data_free(encrypted_data* encrypted_data){
-	
+	int i;
+	if(NULL != encrypted_data->recipients.buf){
+		for(i = 0;i<encrypted_data->recipients.len;i++){
+			recipient_info_free(encrypted_data->recipients.buf + i,ECIES_NISTP256);
+		}
+		ARRAY_FREE(&encrypted_data->recipients);
+	}
+	switch(encrypted_data->symm_algorithm){
+		case AES_128_CCM:
+			aes_ccm_ciphertext_free(&encrypted_data->u.ciphertext);
+			break;
+		default:
+			if(NULL != encrypted_data->u.other_ciphertext.buf)
+				ARRAY_FREE(&encrypted_data->u.other_ciphertext);
+			break;
+	}
 }
+
 /**
  *YGH 39
  */
 static void tobesigned_wsa_free(tobesigned_wsa* tobesigned_wsa){
+	if(NULL != tobesigned_wsa->permission_indices.buf)
+		ARRAY_FREE(&tobesigned_wsa->permission_indices);
+
+	if(NULL != tobesigned_wsa->data.buf)
+		ARRAY_FREE(&tobesigned_wsa->data);
+
+	if(NULL != tobesigned_wsa->flags_content.extension.buf){
+		tbsdata_extension_free(tobesigned_wsa->flags_content.extension.buf);
+		ARRAY_FREE(&tobesigned_wsa->flags_content.extension);
+	}
+	if(NULL != tobesigned_wsa->flags_content.other_data.buf)
+		ARRAY_FREE(&tobesigned_wsa->flags_content.other_data);
 }
+
 /**
  *YGH 40
  */
 static void signed_wsa_free(signed_wsa* signed_wsa){
-
+	int n = signed_wsa->signer.u.certificates.len - 1;
+	signature_free(&signed_wsa->signature,
+			(signed_wsa->signer.u.certificates.buf + n)->unsigned_certificate.version_and_type.verification_key.algorithm);
+	signer_identifier_free(&signed_wsa->signer);
+	tobesigned_wsa_free(&signed_wsa->unsigned_wsa);
 }
+
 /**
  *大力 41
  */
@@ -329,12 +613,12 @@ void sec_data_free(sec_data* sec_data){
         return ;
     switch(sec_data->type){
         case UNSECURED:
-            array_free(sec_data->u.data);
+            ARRAY_FREE(&sec_data->u.data);
             break;
         case SIGNED:
         case SIGNED_EXTERNAL_PAYLOAD:
         case SIGNED_PARTIAL_PAYLOAD:
-            array_free(&sec_data->u.signed_data);
+            ARRAY_FREE(&sec_data->u.signed_data);
             break;
         case SIGNED_WSA:
             signed_wsa_free(&sec_data->u.signed_wsa);
@@ -349,7 +633,7 @@ void sec_data_free(sec_data* sec_data){
             crl_free(&sec_data->u.crl);
             break;
         default:
-			array_free(sec_data->u.other_data);
+			ARRAY_FREE(&sec_data->u.other_data);
             break;
 
     }
