@@ -7,7 +7,7 @@
 #include "../utils/string.h"
 #include "../utils/lock.h"
 #include <stdio.h>
-typedef u32 cme_lsis;
+typedef s32 cme_lsis;
 typedef u32 cmh;
 struct cmh_init{
     cmh cmh;

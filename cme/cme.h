@@ -2,7 +2,6 @@
 #define CME_H
 #include"cme_db.h"
 #include"../utils/common.h"
-#include"../data/data_handle.h"
 enum identifier_type{
     ID_CERTIFICATE = 0,
     ID_HASHEDID8 = 1,

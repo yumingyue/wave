@@ -129,7 +129,7 @@ enum transfer_type{
     IMPLICT = 2,
 };
 /*
- * 生成一个证书请求报文
+ * 生成一个证书请求报,时间单位是秒
  * 参数请看协议
  */
 result sec_get_certificate_request(struct cme_db* cdb,signer_identifier_type type,
@@ -141,8 +141,8 @@ result sec_get_certificate_request(struct cme_db* cdb,signer_identifier_type typ
                 geographic_region* region,
                 bool start_validity,
                 bool life_time_duration,
-                time64 start_time,
-                time64 expiry_time,
+                time32 start_time,
+                time32 expiry_time,
                 string* veri_pub_key,
                 string* enc_pub_key,
                 string* respon_enc_key,
@@ -165,8 +165,8 @@ result sec_certficate_response_processing(struct cme_db* cdb,
 
 result sec_signed_wsa(struct sec_db* sdb,
                 string* data,
-                psid_priority_ssp_array* permissions,
-                time64 life_time,
+                serviceinfo_array* permissions,
+                time32 life_time,
 
                 string* signed_wsa);
 
@@ -216,5 +216,8 @@ result sec_certificate_request_error_verification(struct sec_db* sdb,
 
 result sec_certificate_response_verification(struct sec_db* sdb,
                 tobe_encrypted_certificate_response* cert_resp);
+
+/***************这后面的函数都是certificate的一些帮助接口，方便获取证书的相关信息******/
+
 
 #endif 
