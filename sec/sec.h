@@ -74,7 +74,8 @@ result sec_encrypted_data(struct sec_db* sdb,
                 struct certificate_chain* failed_certs);
 
 
-result sec_secure_data_content_extration(struct sec_db* sdb,cmh cmh,
+result sec_secure_data_content_extration(struct sec_db* sdb,
+                string* sdata,cmh cmh,
                 
                 content_type *type,
                 content_type *inner_type,
@@ -85,7 +86,7 @@ result sec_secure_data_content_extration(struct sec_db* sdb,cmh cmh,
                 bool* set_generation_time,
                 time64_with_standard_deviation *generation_time,
                 bool* set_expiry_time,
-                time64 expiry_time,
+                time64 *expiry_time,
                 bool* set_generation_location,
                 three_d_location *location,
                 certificate* send_cert);
@@ -118,8 +119,9 @@ result sec_signed_data_verification(struct sec_db* sdb,
                 time64 overdue_crl_tolerance);
 /**
  * crl的签名验证  时间单位秒
+ * 
  */
-result sec_crl_verification(struct sec_db* sdb,string* crl,time32 overdue_crl_tolerance,
+result sec_crl_verification(struct sec_db* sdb,string* sec_data,time32 overdue_crl_tolerance,
                         
                 time32* last_crl_time,
                 time32* next_crl_time,
@@ -220,5 +222,23 @@ result sec_certificate_response_verification(struct sec_db* sdb,
 
 /***************这后面的函数都是certificate的一些帮助接口，方便获取证书的相关信息******/
 
-
+static int inline hashedid8_compare(hashedid8* a,hashedid8* b){
+    u8 *ptra,*ptrb;
+    ptra = (u8*)(&a->hashedid8);
+    ptrb = (u8*)(&b->hashedid8);
+    int i;
+    for(i=0;i<8;i++){
+        if(*ptra != *ptrb)
+            return 1;
+        ptra++;
+        ptrb++;
+    }
+    return 0;
+}
+static int inline hashedid8_cpy(hashedid8* dst,hashedid8* src){
+    int i=0;
+    for(i=0;i<8;i++){
+        dst->hashedid8[i] = src->hashedid8[i];
+    }  
+}
 #endif 
