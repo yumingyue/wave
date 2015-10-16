@@ -100,8 +100,8 @@ static void set_crl_request_alarm(struct cmp_db* cmdb){
         next_time = first->time;
         list_del(&first->list);
         if(next_time - FORWARD < now){
-            wave_printf(MSG_WARNING,"cmp的crl_request链表第一个请求时间小于现在时间
-                    请求时间为:%d 下次请求时间：%d",first->time,first->time + first->crl_series);
+            wave_printf(MSG_WARNING,"cmp的crl_request链表第一个请求时间小于现在时间 请求时间为:%d "
+                    "下次请求时间：%d",first->time,first->time + first->crl_series);
             first->time += first->crl_series;
             crl_req_time_insert(cmdb,first);
         }
@@ -109,8 +109,8 @@ static void set_crl_request_alarm(struct cmp_db* cmdb){
             cmdb->crl_request_crl_series = first->crl_series;
             hashedid8_cpy(&cmdb->crl_request_issuer,&first->issuer);
             cmdb->crl_request_issue_date = first->issue_date;
-            wave_printf(MSG_INFO,"插入一个crl_request  crl_series:%d issuer:HASHEDID8_FORMAT  
-                    issue data:%d",first->crl_series,HASHEDID8_VALUE(first->issuer),first->issue_date);
+            wave_printf(MSG_INFO,"插入一个crl_request  crl_series:%d issuer:HASHEDID8_FORMAT "
+                    "issue data:%d",first->crl_series,HASHEDID8_VALUE(first->issuer),first->issue_date);
             free(first);
         }
     }while(next_time -FORWARD < now );
