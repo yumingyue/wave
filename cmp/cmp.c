@@ -35,7 +35,7 @@ struct cmp_db{
     struct wsa_cert_db certs;
     cmh req_cert_cmh;
     cmh req_cert_enc_cmh;
-    struct lsis_array req_lsises;
+    struct lsis_array req_cert_lsises;
     cmh ca_cmh;
     certificate ca_cert;
     string identifier;
@@ -202,15 +202,15 @@ static int generate_cert_request(struct sec_db* sdb,struct cmp_db* cmdb,cme_lsis
         goto fail;
     }
 
-    lsis_array_free(&cmdb->req_lsises);
-    cmdb->req_lsises.lsis = (pssme_lsis*)malloc(sizeof(pssme_lsis) * serviceinfos.len);
-    if(cmdb->req_lsises.lsis == NULL){
+    lsis_array_free(&cmdb->req_cert_lsises);
+    cmdb->req_cert_lsises.lsis = (pssme_lsis*)malloc(sizeof(pssme_lsis) * serviceinfos.len);
+    if(cmdb->req_cert_lsises.lsis == NULL){
         pthread_mutex_unlock(&cmdb->lock);
         goto fail;
     }
-    cmdb->req_lsises.len = serviceinfos.len;
+    cmdb->req_cert_lsises.len = serviceinfos.len;
     for(i=0;i<serviceinfos.len;i++){
-        *(cmdb->req_lsises.lsis+i) = (serviceinfos.serviceinfos + i)->lsis;
+        *(cmdb->req_cert_lsises.lsis+i) = (serviceinfos.serviceinfos + i)->lsis;
     }
     pthread_mutex_lock(&cmdb->lock);
     cme_permissions_free(&permissions);
@@ -387,11 +387,11 @@ static void cert_responce_recieve_progress(struct sec_db* sdb,struct cmp_db* cmd
     if(cme_store_cert(sdb,cert_cmh,&certificate,&rec_value))
         goto fail;
     pthread_mutex_lock(&cmdb->lock);
-    if(pssme_cryptomaterial_handle_storage(sdb,cert_cmh,&cmdb->req_lsises)){
+    if(pssme_cryptomaterial_handle_storage(sdb,cert_cmh,&cmdb->req_cert_lsises)){
         pthread_mutex_unlock(&cmdb->lock);
         goto fail;
     }
-    lsis_array_free(&cmdb->req_lsises);
+    lsis_array_free(&cmdb->req_cert_lsises);
     cmdb->req_cert_cmh = 0;
     cmdb->req_cert_enc_cmh = 0;
     pthread_mutex_unlock(&cmdb->lock);
