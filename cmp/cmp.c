@@ -1,3 +1,6 @@
+/*************
+ *作者：大力
+ */
 #include"cmp.h"
 #include<pthread.h>
 #include<stddef.h>
@@ -24,26 +27,23 @@ struct crl_req_time{
     crl_series crl_series;
     time32 issue_date;
 };
-struct wsa_cert_db{
-    struct list_head list;
-    cmh cert_cmh;
-    cmh key_pair_cmh;
-};
 
 struct cmp_db{
     struct crl_req_time crl_time;
-    struct wsa_cert_db certs;
-    cmh req_cert_cmh;
-    cmh req_cert_enc_cmh;
-    struct lsis_array req_cert_lsises;
-    cmh ca_cmh;
-    certificate ca_cert;
-    string identifier;
-    geographic_region geographic_region;
-    u32 life_time;//单位day
     time32 crl_request_issue_date;
     hashedid8 crl_request_issuer;
     crl_series crl_request_crl_series;
+    
+    cmh req_cert_cmh;
+    cmh req_cert_enc_cmh;
+    struct lsis_array req_cert_lsises;
+
+    cmh ca_cmh;
+    certificate ca_cert;
+
+    string identifier;
+    geographic_region geographic_region;
+    u32 life_time;//单位day
     u32 pending;
     pthread_mutex_t lock;
 };
@@ -150,6 +150,9 @@ u32 cmp_init(){
     //这里很多都没数据没有初始化，这里先不写
     
     return 0;
+}
+void cmp_end(){
+
 }
 static int generate_cert_request(struct sec_db* sdb,struct cmp_db* cmdb,cme_lsis lsis,
                             string* veri_pk,string* enc_pk,string* res_pk,
