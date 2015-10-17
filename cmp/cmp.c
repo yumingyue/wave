@@ -20,6 +20,7 @@
 #define NETWORK_DELAY 60*2 // 单位是s
 #define CRL_REQUSET_LEN 100 //单位字节
 #define RECIEVE_DATA_MAXLEN 1000
+#define TO_FILE_LEN 100
 #define INIT(m) memset(&m,0,sizeof(m))
 struct crl_req_time{
     struct list_head list;
@@ -39,12 +40,13 @@ struct cmp_db{
     cmh req_cert_enc_cmh;
     struct lsis_array req_cert_lsises;
 
+    string identifier;
+    geographic_region region;
+    u32 life_time;//单位day
+    
     cmh ca_cmh;
     certificate ca_cert;
 
-    string identifier;
-    geographic_region geographic_region;
-    u32 life_time;//单位day
     u32 pending;
     pthread_mutex_t lock;
 };
@@ -58,7 +60,264 @@ enum pending_flags{
 pthread_cond_t pending_cond = PTHREAD_COND_INITIALIZER;
 struct cmp_db* cmdb = NULL;
 
+#define ptr_host_to_be(ptr,n){
+    switch(sizeof(n)){
+        case 1:
+            *((((typeof)n)*)ptr) = n;
+            (u8*)ptr += 1;
+            break;
+        case 2:
+            **((((typeof)n)*)ptr) = host_to_be16(n);
+            (u8*)ptr += 2;
+            break;
+        case 4:
+            *((((typeof)n)*)ptr) = host_to_be32(n);
+            (u8*)ptr += 4;
+            break;
+        case 8:
+            *((((typeof)n)*)ptr) = host_to_be64(n);
+            (u8*)ptr += 8;
+            break;
+    }
+}
+/*************
+ *这里的所有编码原则，都是固定长度，我们固定编码。
+ *其他数组或者链表之类的我们就用4字节表示后面有多少字节。
+ ************/
+static int cert_2_file(struct cmp_db* cmdb,int fd){
+    u8* mbuf,buf=NULL;
+    int needlen,size = 0;
+    needlen = 500;//预估一下有多长.
+    buf =(u8*)malloc(needlen);
+    if(buf == NULL)
+        goto fail;
+    mbuf = buf;
+    pthread_mutex_lock(&cmdb->lock);
+    ptr_host_to_be(mbuf,cmdb->ca_cmh);
+    size = certificate_2_buf(&cmdb->ca_cert,mbuf,needlen-size);
+    if(size < 0){
+        pthread_mutex_unlock(&cmdb->lock);
+        wave_error_printf("证书编码的时候错误了");
+        goto fail;
+    }
+    size += sizeof(cmdb->ca_cmh);
+    pthread_mutex_unlock(&cmdb->lock);
+    if(write(fd,buf,size) != size){
+        wave_error_printf("写入文件发生错误");
+        goto fail;
+    }
+    free(buf);
+    return size;
+fail:
+    if(buf != NULL)
+        free(buf);
+    return -1;
+}
+static int others_2_file(struct cmp_db* cmdb,int fd){
+    u8* mbuf,buf=NULL;
+    int needlen;
+    pthread_mutex_lock(&cmdb->lock);
+    needlen =   cmdb->identifier.len + 4+
+                sizeof(cmdb->region.region_type)+sizeof(u32);
+    switch(cmdb->region.region_type){
+        case FROM_ISSUER:
+        case CIRCLE:
+            needlen += sizeof(circular_region);
+            break;
+        case RECTANGLE;
+            needlen += sizeof(rectangular_region);
+            break;
+        case POLYGON:
+            needlen += sizeof(polygonal_region);
+            break;
+        case NONE:
+            needlen = needlen + 4 + cmdb->region.u.other_region.len;
+            break;
+        default:
+            pthread_mutex_unlock(&cmdb->lock);
+            goto fail;
+    }
+    buf = (u8*)malloc(needlen);
+    if(buf == NULL){
+        pthread_mutex_unlcok(&cmdb->lock);
+        goto fail;
+    }
+    mbuf = buf;
+    *(u32*)mbuf = host_to_be32(cmdb->identifier.len);
+    mbuf += 4;
+    memcpy(mbuf,cmdb->identifier.buf,cmdb->identifier.len);
+    mbuf += cmdb->identifier.len;
 
+    ptr_host_to_be(mbuf,cmdb->region.region_type);
+    switch(cmdb->region.region_type){
+        case FROM_ISSUER:
+        case CIRCLE:
+            ptr_host_to_be(mbuf,cmdb->region.u.circular_region);
+            break;
+        case RECTANGLE;
+            ptr_host_to_be(mbuf,cmdb->region.u.rectangular_region);
+            break;
+        case POLYGON:
+            ptr_host_to_be(mbuf,cmdb->region.u.polygonal_region);
+            break;
+        case NONE:
+            *(u32*)mbuf = host_to_be32(cmdb->region.u.other_region.len);
+            mbuf += 4;
+            memcpy(mbuf,cmdb->region.u.other_region.buf,cmdb->region.u.other_region.len);
+            break;
+        default:
+            pthread_mutex_unlock(&cmdb->lock);
+            goto fail;
+    }
+    ptr_host_to_be(mbuf,cmdb->life_time);
+    pthread_mutex_unlock(&cmdb->lock);
+    if ( write(fd,buf,needlen) != needlen){
+        wave_error_printf("文件写入失败");
+        goto fail;
+    }
+    free(buf);
+    return needlen;
+fail:
+    if(buf != NULL)
+        free(buf);
+    return -1;
+}
+static int lsis_array_2_file(struct cmp_db* cmdb,int fd){
+    u8* mbuf,buf = NULL;
+    int needlen,i;
+
+    pthread_mutex_lock(&cmdb->lock);
+    needlen = cmdb->req_cert_lsises.len;
+    needlen = sizeof(*cmdb->req_cert_lsises.lsis) * needlen;
+    buf = (u8*)malloc(needlen+4);
+    if(buf == NULL){
+        pthread_mutex_unlcok(&cmdb->lock);
+        goto fail;
+    }
+    mbuf = buf+4;
+    for(i=0;i<cmdb->req_cert_lsises.len;i++)
+        ptr_host_to_be(mbuf,*(cmdb->req_cert_lsises.buf+i));
+    *(u32*)buf = host_to_be32(needlen);
+    pthread_mutex_unlock(&cmdb->lock);
+    if( write(fd,buf,needlen+4) != needlen+4){
+        goto fail;
+    }
+    free(buf);
+    return needlen + 4;
+fail:
+    if(buf != NULL)
+        free(buf);
+    return -1;
+}
+static int crl_cert_request_2_file(struct cmp_db* cmdb,int fd){
+    u8* mbuf,buf;
+    int needlen = sizeof(time32) + 8 + sizeof(crl_series) +
+        2*sizeof(cmh);
+    if( (buf = (u8*)malloc(needlen)) == NULL){
+        wave_error_printf("分配失败");
+        return -1;
+    }
+    mbuf = buf;
+    pthread_mutex_lock(&cmdb->lock);
+    ptr_host_to_be(mbuf,cmdb->crl_request_issue_date);
+    hashedid8_cpy(mbuf,cmdb->crl_request_issuer);
+    mbuf += 8;
+    ptr_host_to_be(mbuf,cmdb->crl_request_crl_series);
+    ptr_host_to_be(mbuf,cmdb->req_cert_cmh);
+    ptr_host_to_be(mbuf,cmdb->req_cert_enc_cmh);
+    pthread_mutex_unlock(&cmdb->lock);
+    if( write(fd,buf,needlen) != needlen){
+        wave_error_printf("写入失败");
+        goto fail;
+    }
+    free(buf);
+    return needlen;
+fail:
+    free(buf);
+    return -1;
+}
+/**
+ * 这个是固定长度，我们编码成固定长度
+ */
+static int crl_req_time_2_file(struct crl_req_time* ptr,int fd){
+    int needlen ;
+    u8 *buf,*obuf;
+    needlen = sizeof(time32) + 8 +sizeof(crl_series) + sizeof(time32);
+    if( (buf = (u8*)malloc(needlen)) == NULL) {
+        wave_error_printf("空间分配失败");
+        return -1;
+    }
+    obuf = buf;
+    ptr_host_to_be(buf,ptr->time);
+    memcpy(buf,&ptr->issuer.hashedid8,8);
+    buf +=8;
+    ptr_host_to_be(buf,ptr->crl_series);
+    ptr_host_to_be(buf,ptr->issue_date);
+    if( write(fd,obuf,needlen) != needlen){
+        free(obuf);
+        wave_error_printf("写入失败");
+        return -1;
+    }
+    free(obuf);
+    return needlen;
+}
+/**
+ * 所有的长度都用四字节编码
+ */
+static int crl_req_time_list_2_file(struct cmp_db* cmdb,int fd){
+    struct list_head *head;
+    struct crl_req_time* ptr;
+    u32 size,temp;
+    
+    size = 0;
+    pthread_mutex_lock(&cmdb->lock);
+    head = &cmdb->crl_time;
+    list_for_each_entry(ptr,head,list){
+        if( (temp = crl_req_time_2_file(ptr,fd)) < 0){
+            wave_printf_fl(MSG_ERROR,"crl_req_time_2_file 失败");
+            pthread_mutex_unlock(&cmdb->lock);
+            return -1;
+        }
+        size +=temp;
+    }
+    pthread_mutex_unlock(&cmdb->lock);
+    file_insert(fd,&(host_to_be32(size)),4);
+    if ( lseek(fd,4,SEEK_CUR) == -1){
+        wave_error_printf("文件移动偏移量出问题");
+        return -1;
+    }
+    return size + 4;
+}
+static void cmp_db_2_file(struct cmp_db* cmdb,const char* name){
+    int fd;
+    if ((fd = open(name,O_WRONLY|O_CREAT|O_TRUNC))<0){
+        wave_printf(MSG_ERROR,"打开文件 %s 失败"，name);
+        return ;
+    }
+    
+    if ( crl_req_time_list_2_file(cmdb,fd) <0)
+        goto fail;
+    if ( crl_cert_request_2_file(cmdb,fd) < 0)
+        goto fail;
+    if( lsis_array_2_file(cmdb,fd) < 0)
+        goto fail;
+    if( others_2_file(cmdb,fd) < 0)
+        goto fail;
+    if( cert_2_file(cmdb,fd) < 0)
+        goto fail;
+    close(fd);
+fail:
+    close(fd);
+}
+
+static int file_2_cmp_db(struct cmp_db* cmdb,const char* name){
+    int fd;
+    if( (fd = open(name,O_RDONLY)) <0){
+        wave_error_printf("文件 %s 打开失败\n",name);
+        return -1;
+    }
+
+}
 static void crl_req_time_insert(struct cmp_db* cmdb,struct crl_req_time* new){
     struct crl_req_time *head,*ptr;
     pthread_mutex_lock(&cmdb->lock);

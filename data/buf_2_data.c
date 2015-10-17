@@ -52,7 +52,7 @@ static u16 head_bit_num(u8* mbuf){
 	else if(ll <= 0xbf)
 		return 2;
 	else if(ll <= 0xdf)
-		return 3
+		return 3;
 	else if(ll <= 0xef)
 		return 4;
 	else if(ll <= 0xf7)
@@ -61,21 +61,21 @@ static u16 head_bit_num(u8* mbuf){
 		return 6;
 	else if(ll <= 0xfd)
 		return 7;
-	else(ll <= 0xfe)
+	else if(ll <= 0xfe)
 		return 8;
 }
 
 
-static u16 flag_length(u4* mbuf){
-	u4 length;
+static u16 flag_length(u16* mbuf){
+	u16 length;
 	length = get4(mbuf);
 	if(length<=0x07)
 		return 1;
 	else if(length <=0x0b )
 		return 2;
 	else if(length<=0x0d)
-		return 3
-	else (length<=0x0e)
+		return 3;
+	else if(length<=0x0e)
 		return 4;
 }
 /** 计算variable-length vectors with variable-length length enconding中 数据的个数
@@ -94,23 +94,23 @@ static u32 variablelength_data_num(u8* mbuf,u16 full_encoding_length){
 			full_encoding_length16 = be_to_host16(full_encoding_length16);
 			full_encoding_length16 = full_encoding_length16>>8;
 			return full_encoding_length16;
-		case 2;
+		case 2:
 			full_encoding_length16 = get16(mbuf);
 			full_encoding_length16 = be_to_host16(full_encoding_length16);
 			return full_encoding_length16 & 0x3fff;
-		case 3;
+		case 3:
 			full_encoding_length32 = get32(mbuf);
-			full_encoding_length32 = be_to_host32(full_encoding_length32;)
+			full_encoding_length32 = be_to_host32(full_encoding_length32);
 			full_encoding_length32 = full_encoding_length32>>8;
 			full_encoding_length32 = full_encoding_length32 & 0x003fffff;
-			return (u16)full_encoding_lenth32;
-		case 4;
+			return (u16)full_encoding_length32;
+		case 4:
 			full_encoding_length32 = get32(mbuf);
 			full_encoding_length32 = be_to_host32(full_encoding_length32);
 			full_encoding_length32 = full_encoding_length32;
 			full_encoding_length32 = full_encoding_length32 & 0x0fffffff;
 			return (u16)full_encoding_length32;
-		case 5;
+		case 5:
 			full_encoding_length64 = get64(mbuf);
 			full_encoding_length64 = be_to_host64(full_encoding_length64);
 			full_encoding_length64 = full_encoding_length64 >> 24;
@@ -133,6 +133,7 @@ static u32 variablelength_data_num(u8* mbuf,u16 full_encoding_length){
 			full_encoding_length64 = be_to_host64(full_encoding_length64);
 			full_encoding_length64 = full_encoding_length64 & 0x00ffffffffffffff;
 			return (u16)full_encoding_length64;
+	}
 }
 
 
@@ -140,7 +141,7 @@ static u32 variablelength_data_num(u8* mbuf,u16 full_encoding_length){
 /**
  * buf_to 1
  */
-static u32 buf_2_time64_with_standard_deviation(const u8* buf, const u32 len, 
+static u32 buf_2_time64_with_standard_deviation(  u8* buf,   u32 len, 
 				time64_with_standard_deviation* time64_with_standard_deviation){
 	u8* mbuf = buf;
 	u32 size = len;
@@ -166,7 +167,7 @@ static u32 buf_2_time64_with_standard_deviation(const u8* buf, const u32 len,
  *	buf_to 2
  */
 
-static u32 buf_2_tbsdata_extension(const u8* buf, const u32 len, tbsdata_extension* tbsdata_extension){
+static u32 buf_2_tbsdata_extension(  u8* buf, const u32 len, tbsdata_extension* tbsdata_extension){
 	u8* mbuf = buf;
 	u32 size = len;
 	u16 bitnum;//代表头部编码长度
@@ -196,14 +197,14 @@ static u32 buf_2_tbsdata_extension(const u8* buf, const u32 len, tbsdata_extensi
 /**
  *	buf_to 3
  */
-static u32 buf_2_three_d_location(const u8* buf, const u32 len, three_d_location* three_d_location){
+static u32 buf_2_three_d_location(  u8* buf,   u32 len, three_d_location* three_d_location){
 	u8* mbuf = buf;
 	u32 size = len;
 	//u32 used_length = 0;
 
 	if(size >= 4 ){
 		three_d_location->latitude	= get32(mbuf);
-		be_to_host32(three_d_location->latitude)
+		be_to_host32(three_d_location->latitude);
 		mbuf += 4;
 		size -= 4;
 	//	used_lenth += 4;
@@ -231,14 +232,14 @@ static u32 buf_2_three_d_location(const u8* buf, const u32 len, three_d_location
 /**
  *	buf_to 4
  */
-static u32 buf_2_hashedid8(const u8* buf, const u32 len, hashedid8* hashedid8){
+static u32 buf_2_hashedid8(  u8* buf, const u32 len, hashedid8* hashedid8){
 	u8* mbuf = buf; 
 	u32 size = len;
 	int i;
 	if (size < 8)
 		return 0;
 	for(i = 0; i < 8; i++ ){
-		hashedid8->hashedid[i] = get8(mbuf);
+		hashedid8->hashedid8[i] = get8(mbuf);
 		mbuf++;
 		size--;
 	}
@@ -251,9 +252,9 @@ static u32 buf_2_hashedid8(const u8* buf, const u32 len, hashedid8* hashedid8){
  *	@field_size 外部传入参数，注意在填充结构体时，外部传入参数是不需要真正填充进结构体的
  *	因为结构体定义中，并没有extern数据，而且编码中，extern也没有编在buf所指像的网络流中
  */
-static u32 buf_2_elliptic_curve_point(const u8* buf, const u32 len, 
+static u32 buf_2_elliptic_curve_point(  u8* buf,   u32 len, 
 				elliptic_curve_point* elliptic_curve_point, pk_algorithm pk_algorithm){
-	u8 mbuf = buf;
+	u8* mbuf = buf;
 	u32 size = len;
 	u16 bitnum;
 
@@ -271,19 +272,19 @@ static u32 buf_2_elliptic_curve_point(const u8* buf, const u32 len,
 		return 0;
 	elliptic_curve_point->x.buf = (u8*)malloc(sizeof(u8)* elliptic_curve_point->x.len);
 	fill_buf8(elliptic_curve_point->x.buf, mbuf, elliptic_curve_point->x.len);
-	mbuff += elliptic_curve_point->x.len * sizeof(u8);
+	mbuf += elliptic_curve_point->x.len * sizeof(u8);
 	size -= elliptic_curve_point->x.len * sizeof(u8);
 
 	if(elliptic_curve_point->type == UNCOMPRESSED){
 		bitnum = head_bit_num(mbuf);
 		elliptic_curve_point->u.y.len = variablelength_data_num(mbuf, bitnum);
 		mbuf += bitnum;
-		size-=bitnum
-		if(size < bitnum + elliptic_curve_point->u.y.len*sizeof(u8)
+		size-=bitnum;
+		if(size < bitnum + elliptic_curve_point->u.y.len*sizeof(u8))
 			return 0;
 		elliptic_curve_point->u.y.buf = (u8*)malloc(sizeof(u8)* elliptic_curve_point->u.y.len);
 		fill_buf8(elliptic_curve_point->u.y.buf, mbuf, elliptic_curve_point->u.y.len);
-		mbuff += elliptic_curve_point->u.y.len * sizeof(u8);
+		mbuf += elliptic_curve_point->u.y.len * sizeof(u8);
 		size -= elliptic_curve_point->u.y.len * sizeof(u8);
 	}
 	return len - size;
@@ -292,14 +293,14 @@ static u32 buf_2_elliptic_curve_point(const u8* buf, const u32 len,
  *	buf_to 6
  *
  */
-static u32 buf_2_ecdsa_signature(const u8* buf,const u32 len,ecdsa_signature* ecdsa_signature, 
+static u32 buf_2_ecdsa_signature(  u8* buf,  u32 len,ecdsa_signature* ecdsa_signature, 
 		pk_algorithm pk_algorithm){
 	u8* mbuf = buf;
 	u16 bitnum ;
 
 	u32 size = len;
 	u32 elliptic_length;
-	elliptic_length = buf_2_elliptic_curve_point(mbuf,len, &ecdsa_signature->elliptic_curve_point, pk_algorithm);
+	elliptic_length = buf_2_elliptic_curve_point(mbuf,len, &ecdsa_signature->r, pk_algorithm);
 	if(0 == elliptic_length)
 		return 0;
 	mbuf += elliptic_length;
@@ -330,7 +331,7 @@ static u32 buf_2_ecdsa_signature(const u8* buf,const u32 len,ecdsa_signature* ec
 /*
  
 //buf_to 7
-static u32 buf_2_signature(const u8* buf,const u32 len,signature*,signature,pk_algorithm pk_algorithm){
+static u32 buf_2_signature(  u8* buf,  u32 len,signature*,signature,pk_algorithm pk_algorithm){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -361,7 +362,7 @@ static u32 buf_2_signature(const u8* buf,const u32 len,signature*,signature,pk_a
 }
 
 //buf_to 8
-static u32 buf_2_public_key(conse u8* buf,const u32 len,public_key* public_key,pk_algorithm pk_algorithm){
+static u32 buf_2_public_key(conse u8* buf,  u32 len,public_key* public_key,pk_algorithm pk_algorithm){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -417,7 +418,7 @@ static u32 buf_2_public_key(conse u8* buf,const u32 len,public_key* public_key,p
     
 
 //buf_2 9
-static u32 buf_2_two_d_location(const u8* buf,const u32 len,two_d_location* two_d_location){
+static u32 buf_2_two_d_location(  u8* buf,  u32 len,two_d_location* two_d_location){
 	u8 mbuf=buf;
 	u32 size=len;
 	
@@ -442,7 +443,7 @@ static u32 buf_2_two_d_location(const u8* buf,const u32 len,two_d_location* two_
 
 
 //buf_to 10
-static u32 buf_2_rectangular_region(const u8* buf,const u32 len,rectangular_region* rectangular_region){
+static u32 buf_2_rectangular_region(  u8* buf,const u32 len,rectangular_region* rectangular_region){
   u8* mbuf=buf;
   u32 size=len;
   u32 rectangular_length1;
@@ -465,7 +466,7 @@ static u32 buf_2_rectangular_region(const u8* buf,const u32 len,rectangular_regi
   
 
 //buf_to 11
-static u32 buf_2_circular_region(const u8* buf,const u32 len,circular_region* circular_region){
+static u32 buf_2_circular_region(  u8* buf,  u32 len,circular_region* circular_region){
   u8* mbuf=buf;
   u32 size=len;
   u32 circular_length;
@@ -487,7 +488,7 @@ static u32 buf_2_circular_region(const u8* buf,const u32 len,circular_region* ci
 }
 
 //buf_to 12
-static u32 buf_2_geographic_region(const u8* buf,const u32 len,geographic_region*,geographic_region){
+static u32 buf_2_geographic_region(  u8* buf,const u32 len,geographic_region*,geographic_region){
 
 	u8* mbuf=buf;
 	u32 size=len;
@@ -557,7 +558,7 @@ static u32 buf_2_geographic_region(const u8* buf,const u32 len,geographic_region
 
 //buf_2  13
 
-static u32 buf_2_psid_priority(const u8* buf,const u32 len,psid_priority* psid_priority){
+static u32 buf_2_psid_priority(  u8* buf,  u32 len,psid_priority* psid_priority){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -579,7 +580,7 @@ static u32 buf_2_psid_priority(const u8* buf,const u32 len,psid_priority* psid_p
 
 
 //buf_2 14
-static u32 buf_2_psid_priority_array(const u8* buf,const u32 len,psid_priority_array* psid_priority_array){
+static u32 buf_2_psid_priority_array(  u8* buf,const u32 len,psid_priority_array* psid_priority_array){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -626,7 +627,7 @@ static u32 buf_2_psid_priority_array(const u8* buf,const u32 len,psid_priority_a
 
 //buf_2 15
 
-static u32 buf_2_psid_array(const u8* buf,const u32 len,psid_array* psid_array){
+static u32 buf_2_psid_array(  u8* buf,  u32 len,psid_array* psid_array){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -683,7 +684,7 @@ static u32 buf_2_psid_array(const u8* buf,const u32 len,psid_array* psid_array){
     
 //buf_2 16
 
-static u32 buf_2_psid_ssp(const u8* buf,const u32 len,psid_ssp* psid_ssp){
+static u32 buf_2_psid_ssp(  u8* buf,  u32 len,psid_ssp* psid_ssp){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -714,7 +715,7 @@ static u32 buf_2_psid_ssp(const u8* buf,const u32 len,psid_ssp* psid_ssp){
 
 
 //buf_2 17
-static u32 buf_2_psid_ssp_array(const u8* buf,const u32 len,psid_ssp_array* psid_ssp_array){
+static u32 buf_2_psid_ssp_array(  u8* buf,const u32 len,psid_ssp_array* psid_ssp_array){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -766,7 +767,7 @@ static u32 buf_2_psid_ssp_array(const u8* buf,const u32 len,psid_ssp_array* psid
 }
 
 //buf_2 18
-static u32 buf_2_psid_priority_ssp(const u8* buf,const u32 len,psid_priority_ssp* psid_priority_ssp){
+static u32 buf_2_psid_priority_ssp(  u8* buf,  u32 len,psid_priority_ssp* psid_priority_ssp){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -797,7 +798,7 @@ static u32 buf_2_psid_priority_ssp(const u8* buf,const u32 len,psid_priority_ssp
 
 //buf_2 19
 
-static u32 buf_2_psid_priority_ssp_array(const u8* buf,const u32 len,psid_priority_ssp_array* psid_priority_ssp_array){
+static u32 buf_2_psid_priority_ssp_array(  u8* buf,const u32 len,psid_priority_ssp_array* psid_priority_ssp_array){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -850,7 +851,7 @@ static u32 buf_2_psid_priority_ssp_array(const u8* buf,const u32 len,psid_priori
 
 //buf_to 20
 
-static u32 buf_2_wsa_scope(const u8* buf,const u32 len,wsa_scope* wsa_scope){
+static u32 buf_2_wsa_scope(  u8* buf,  u32 len,wsa_scope* wsa_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -879,7 +880,7 @@ static u32 buf_2_wsa_scope(const u8* buf,const u32 len,wsa_scope* wsa_scope){
 }
 
 //buf_2 21
-static u32 buf_2_anonymous_scope(const u8* buf,const u32 len,anonymous_scope* anonymous_scope){
+static u32 buf_2_anonymous_scope(  u8* buf,const u32 len,anonymous_scope* anonymous_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -921,7 +922,7 @@ static u32 buf_2_anonymous_scope(const u8* buf,const u32 len,anonymous_scope* an
 }
 
 //buf_2 22
-static u32 buf_2_identified_scope(const u8* buf,const u32 len,identified_scope* identified_scope){
+static u32 buf_2_identified_scope(  u8* buf,  u32 len,identified_scope* identified_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -952,7 +953,7 @@ static u32 buf_2_identified_scope(const u8* buf,const u32 len,identified_scope* 
 
 //buf_2 23
 
-static u32 buf_2_identified_not_localized_scope(const u8* buf,const u32 len,identified_not_localized_scope* identified_not_localized_scope){
+static u32 buf_2_identified_not_localized_scope(  u8* buf,const u32 len,identified_not_localized_scope* identified_not_localized_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -973,7 +974,7 @@ static u32 buf_2_identified_not_localized_scope(const u8* buf,const u32 len,iden
 }
 
 //buf_2 24
-static u32 buf_2_wsa_ca_scope(const u8* buf,const u32 len,wsa_ca_scope* wsa_ca_scope){
+static u32 buf_2_wsa_ca_scope(  u8* buf,  u32 len,wsa_ca_scope* wsa_ca_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -1013,7 +1014,7 @@ static u32 buf_2_wsa_ca_scope(const u8* buf,const u32 len,wsa_ca_scope* wsa_ca_s
 }
 
 //buf_2 25
-static u32 buf_2_sec_data_exch_ca_scope(const u8* buf,const u32 len,sec_data_exch_ca_scope* sec_data_exch_ca_scope){
+static u32 buf_2_sec_data_exch_ca_scope(  u8* buf,  u32 len,sec_data_exch_ca_scope* sec_data_exch_ca_scope){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -1063,7 +1064,7 @@ static u32 buf_2_sec_data_exch_ca_scope(const u8* buf,const u32 len,sec_data_exc
 }
 
 //buf_2 26
-static u32 buf_2_root_ca_scope(const u8* buf,const u32 len,root_ca_scope* root_ca_scope){
+static u32 buf_2_root_ca_scope(  u8* buf,  u32 len,root_ca_scope* root_ca_scope){
 	u8* mbuf=buf;
 	u16 bitnum1;
 	u16 bitnum2;
@@ -1122,7 +1123,7 @@ static u32 buf_2_root_ca_scope(const u8* buf,const u32 len,root_ca_scope* root_c
 
 
 //buf_2 27
-static u32 buf_2_cert_specific_data(const u8* buf,const u32 len,cert_specific_data* cert_specific_data, holder_type holder_type ){
+static u32 buf_2_cert_specific_data(  u8* buf,  u32 len,cert_specific_data* cert_specific_data, holder_type holder_type ){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u32 size=len;
@@ -1222,7 +1223,7 @@ static u32 buf_2_cert_specific_data(const u8* buf,const u32 len,cert_specific_da
 
 
 //buf_2 28
-static u32 buf_2_tobesigned_certificate(const u8* buf,const u32 len,tobesigned_certificate* tobesigned_certificate,u8 version_and_type ){
+static u32 buf_2_tobesigned_certificate(  u8* buf,  u32 len,tobesigned_certificate* tobesigned_certificate,u8 version_and_type ){
 	u8* mbuf=buf;
 	u16 bitnum;
 	u16 bitnum2;
@@ -1339,7 +1340,7 @@ static u32 buf_2_tobesigned_certificate(const u8* buf,const u32 len,tobesigned_c
 }
 
 //buf_2 29
-static u32 buf_2_certificate(const u8* buf,const u32 len,certificate* certificate){
+static u32 buf_2_certificate(  u8* buf,  u32 len,certificate* certificate){
   
 	u8* mbuf=buf;
 	u16 bitnum;
@@ -1368,7 +1369,7 @@ static u32 buf_2_certificate(const u8* buf,const u32 len,certificate* certificat
 	  return len-size;
 	  break;  
 	 case 3:
-	 elliptic_curve_point_length=buf_2_elliptic_curve_point(mbuf,len,&certificate->u.reconstruction_value);
+	 elliptic_curve_point_length=buf_2_elliptic_curve_point(mbuf,len,&certificate->u.re ruction_value);
       if(0==elliptic_curve_point_length)
 		  return -1;
 	  mbuf+=elliptic_curve_point_length;
@@ -1394,7 +1395,7 @@ static u32 buf_2_certificate(const u8* buf,const u32 len,certificate* certificat
 
 
 //buf_2 30
-static u32 buf_2_signer_identifier(const u8* buf,const u32 len,signer_identifier* signer_identifier){
+static u32 buf_2_signer_identifier(  u8* buf,  u32 len,signer_identifier* signer_identifier){
  
 	u8* mbuf=buf;
 	u16 bitnum;
@@ -1474,7 +1475,7 @@ static u32 buf_2_signer_identifier(const u8* buf,const u32 len,signer_identifier
 
   
 // buf_2 31
-static u32 buf_2_crl_request(const u8* buf,const u32 len,crl_request* crl_request){
+static u32 buf_2_crl_request(  u8* buf,  u32 len,crl_request* crl_request){
 	u8* mbuf=buf;
 	u32 size=len;
 	int i;
@@ -1503,7 +1504,7 @@ static u32 buf_2_crl_request(const u8* buf,const u32 len,crl_request* crl_reques
 
 
 // buf_2 32
-static u32 buf_2_certid10(const u8* buf, const u32 len, certid10* certid10){
+static u32 buf_2_certid10(  u8* buf, const u32 len, certid10* certid10){
 	u8* mbuf = buf; 
 	u32 size = len;
 	int i;
@@ -1519,7 +1520,7 @@ static u32 buf_2_certid10(const u8* buf, const u32 len, certid10* certid10){
 
 
 //buf_2 33
-static u32 buf_2_id_and_date(const u8* buf, const u32 len, id_and_date* id_and_date){
+static u32 buf_2_id_and_date(  u8* buf,   u32 len, id_and_date* id_and_date){
    	u8* mbuf = buf; 
 	u32 size = len;
 	u32 certid10_length;
@@ -1539,7 +1540,7 @@ static u32 buf_2_id_and_date(const u8* buf, const u32 len, id_and_date* id_and_d
 
 
 // buf_2 34
-static u32 buf_2_tobesigned_crl(const u8* buf, const u32 len, tobesigned_crl* tobesigned_crl){
+static u32 buf_2_tobesigned_crl(  u8* buf, const u32 len, tobesigned_crl* tobesigned_crl){
    	u8* mbuf = buf; 
 	u32 size = len;
     u16 bitnum;
@@ -1630,7 +1631,7 @@ static u32 buf_2_tobesigned_crl(const u8* buf, const u32 len, tobesigned_crl* to
 
 
 //buf_2 35
-static u32 buf_2_crl(const u8* buf, const u32 len, crl* crl){
+static u32 buf_2_crl(  u8* buf,   u32 len, crl* crl){
    	u8* mbuf = buf; 
 	u32 size = len;
     u32 signer_length;
@@ -1661,7 +1662,7 @@ static u32 buf_2_crl(const u8* buf, const u32 len, crl* crl){
  }
 
 //buf_2 36
-static u32 buf_2_tobe_encrypted_certificate_response_acknowledgment(const u8* buf, const u32 len, tobe_encrypted_certificate_response_acknowledgment* tobe_encrypted_certificate_response_acknowledgment){
+static u32 buf_2_tobe_encrypted_certificate_response_acknowledgment(  u8* buf,   u32 len, tobe_encrypted_certificate_response_acknowledgment* tobe_encrypted_certificate_response_acknowledgment){
 	u8* mbuf = buf; 
 	u32 size = len;
 	int i;
@@ -1676,7 +1677,7 @@ static u32 buf_2_tobe_encrypted_certificate_response_acknowledgment(const u8* bu
 }
 
 //buf_2 37
-static u32 buf_2_tobe_encrypted_certificate_request_error(const u8* buf, const u32 len, tobe_encrypted_certificate_request_error* tobe_encrypted_certificate_request_error){
+static u32 buf_2_tobe_encrypted_certificate_request_error(  u8* buf,   u32 len, tobe_encrypted_certificate_request_error* tobe_encrypted_certificate_request_error){
 	u8* mbuf = buf; 
 	u32 size = len;_
 	u32 signer_length;
@@ -1712,7 +1713,7 @@ static u32 buf_2_tobe_encrypted_certificate_request_error(const u8* buf, const u
 }
 
 //buf_2 38
-static u32 buf_2_  tobe_encrypted_certificate_response(const u8* buf, const u32 len, 
+static u32 buf_2_  tobe_encrypted_certificate_response(  u8* buf,   u32 len, 
 		tobe_encrypted_certificate_response* tobe_encrypted_certificate_response,u8 version_and_type){
    	u8* mbuf = buf; 
 	u32 size = len;
@@ -1779,7 +1780,7 @@ static u32 buf_2_  tobe_encrypted_certificate_response(const u8* buf, const u32 
 
 
 //buf_2 39
-static u32 buf_2_tobesigned_certificate_request(const u8* buf, const u32 len, tobesigned_certificate_request* tobesigned_certificate_request){
+static u32 buf_2_tobesigned_certificate_request(  u8* buf,   u32 len, tobesigned_certificate_request* tobesigned_certificate_request){
    	u8* mbuf = buf; 
 	u32 size = len;
 	u32 cert_specific_data_length;
@@ -1858,7 +1859,7 @@ static u32 buf_2_tobesigned_certificate_request(const u8* buf, const u32 len, to
 }
 
 //buf_2 40
-static u32 buf_2_certificate_request(const u8* buf, const u32 len, certificate_request* certificate_request){
+static u32 buf_2_certificate_request(  u8* buf,   u32 len, certificate_request* certificate_request){
    	u8* mbuf = buf; 
 	u32 size = len;	  
 	u32 signer_length;
@@ -1884,7 +1885,7 @@ static u32 buf_2_certificate_request(const u8* buf, const u32 len, certificate_r
 }
 
 //buf_2 41
-static u32 buf_2_tobesigned_data(const u8* buf, const u32 len, tobesigned_data* tobesigned_data,content_type type){
+static u32 buf_2_tobesigned_data(  u8* buf,   u32 len, tobesigned_data* tobesigned_data,content_type type){
    	u8* mbuf = buf; 
 	u32 size = len;	  
     u16 bitnum;
@@ -2028,7 +2029,7 @@ static u32 buf_2_tobesigned_data(const u8* buf, const u32 len, tobesigned_data* 
  * @type 外部传入参数
  *  返回值：0 失败; 大于零 成功返回占用了多少字节
  */
-static u32 buf_2_signed_data(const u8* buf, const u32 len, signed_data* signed_data, content_type type) {
+static u32 buf_2_signed_data(  u8* buf,   u32 len, signed_data* signed_data, content_type type) {
 	u8* mbuf = buf;
 	u32 size = len;						
 	u32 lenth_signed_data;//signed_data的字节长度
@@ -2057,7 +2058,7 @@ static u32 buf_2_signed_data(const u8* buf, const u32 len, signed_data* signed_d
 }
 
 //buf_2 43
-static u32 buf_2_tobe_encrypted(const u8* buf, const u32 len, tobe_encrypted* tobe_encrypted) {
+static u32 buf_2_tobe_encrypted(  u8* buf,   u32 len, tobe_encrypted* tobe_encrypted) {
 	u8* mbuf = buf;
 	u32 size = len;
 	u16 bitnum;
@@ -2183,7 +2184,7 @@ static u32 buf_2_tobe_encrypted(const u8* buf, const u32 len, tobe_encrypted* to
 }
 
 //buf_2 44
-static u32 buf_2_aes_ccm_ciphertext(const u8* buf, const u32 len, aes_ccm_ciphertext* aes_ccm_ciphertext) {
+static u32 buf_2_aes_ccm_ciphertext(  u8* buf,   u32 len, aes_ccm_ciphertext* aes_ccm_ciphertext) {
 	u8* mbuf = buf;
 	u32 size = len;
 	u16  bitnum;
@@ -2209,7 +2210,7 @@ static u32 buf_2_aes_ccm_ciphertext(const u8* buf, const u32 len, aes_ccm_cipher
 }
 
 //buf_2 45
-static u32 buf_2_ecies_nist_p256_encrypted_key(const u8* buf, const u32 len, ecies_nist_p256_encrypted_key* ecies_nist_p256_encrypted_key) {
+static u32 buf_2_ecies_nist_p256_encrypted_key(  u8* buf,   u32 len, ecies_nist_p256_encrypted_key* ecies_nist_p256_encrypted_key) {
 	u8* mbuf = buf;
 	u32 size = len;
 	u16  bitnum;
@@ -2244,7 +2245,7 @@ static u32 buf_2_ecies_nist_p256_encrypted_key(const u8* buf, const u32 len, eci
 }
 
 //buf_2 46
-static u32 buf_2_recipient_info(const u8* buf, const u32 len, recipient_info* recipient_info ,pk_algorithm pk_algorithm ) {
+static u32 buf_2_recipient_info(  u8* buf,   u32 len, recipient_info* recipient_info ,pk_algorithm pk_algorithm ) {
 	u8* mbuf = buf;
 	u32 size = len;
 	u16  bitnum;
@@ -2284,7 +2285,7 @@ static u32 buf_2_recipient_info(const u8* buf, const u32 len, recipient_info* re
 }
 
 //buf_2 47
-static u32 buf_2_encrypted_data(const u8* buf, const u32 len, encrypted_data* encrypted_data) {
+static u32 buf_2_encrypted_data(  u8* buf,   u32 len, encrypted_data* encrypted_data) {
 	u8* mbuf = buf;
 	u32 size = len;
 	u16 bitnum1;
@@ -2349,7 +2350,7 @@ static u32 buf_2_encrypted_data(const u8* buf, const u32 len, encrypted_data* en
    * 48
     */
 
-static  u32 buf_2_tobesigned_wsa(const u8* buf,u32 len,tobesigned_wsa *tobesigned_wsa){
+static  u32 buf_2_tobesigned_wsa(  u8* buf,u32 len,tobesigned_wsa *tobesigned_wsa){
 	u8* mbuf = buf;
 	u32 size = len;
 	u32 time64_length;
@@ -2438,7 +2439,7 @@ static  u32 buf_2_tobesigned_wsa(const u8* buf,u32 len,tobesigned_wsa *tobesigne
 		  * 49
 		   */
 
-static u32 buf_2_signed_wsa(const u8* buf,const u32 len,signed_wsa *signed_wsa){
+static u32 buf_2_signed_wsa(  u8* buf,  u32 len,signed_wsa *signed_wsa){
 	u8* mbuf = buf;
 	u32 size = len;
 	u32 signer_len;
@@ -2477,7 +2478,7 @@ if(0 == signer_len)
  *  @sec:需要填充的数据结构
  *  return: -1：转换失败；0 ：转换成功
  */
-u32 buf_2_sec_data(const u8* buf,const u32 len, sec_data* sec_data){
+u32 buf_2_sec_data(  u8* buf,  u32 len, sec_data* sec_data){
     u8* mbuf = buf;
     u32 size = len;
     //检查长度是否满足最低要求
