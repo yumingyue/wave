@@ -11,4 +11,6 @@ enum{
 
 extern int wave_debug_level;
 void wave_printf(int level,const char *fmt,...);
+void wave_printf_fl(int level,const char* fmt,...);
+void wave_error_printf(const char*fmt,...);
 #endif
